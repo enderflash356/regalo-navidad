@@ -11,10 +11,10 @@ const adventDaysData = [
     {
         "day": 1,
         "date": "2026-11-01",
-        "title": "Dia 1: Comienzan los regalos je...",
-        "content": "Hola mi niña linda, este es el primero de muchos regalitos que vendran día a día hasta Navidad. Espero te gusten mucho y recuerda que te amo jiji",
-        "type": "text",
-        "textColor": "#e2e8f0",
+        "title": "Dia 1: Un poema para tu alma...",
+        "content": "Hola mi niña linda, este es el primero de muchos regalitos que vendran día a día hasta Navidad. Y quiero empezar con un poema para expresarte mis sentimientos...",
+        "type": "audio",
+        "textColor": "#fda4af",
         "mediaUrl": ""
     },
     {
