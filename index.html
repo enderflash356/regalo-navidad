@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Regalo Especial de Navidad - Para mi amada Ali 𓆩♡𓆪</title>
+    
+    <!-- Fuentes y Estilos -->
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="features.css">
+
+    <!-- Librería de Confeti -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+</head>
+
+<body> 
+    <div class="snowflakes" id="snowflakes"></div>
+    
+    <header>
+        <h1>Para mi dulce y amada Ali 𓆩♡𓆪</h1>
+        <p class="subtitle">Pequeños detalles y regalos para que recuerdes cuanto te amo cada día hasta el día de Navidad</p>
+
+        <!-- BARRA DE PROGRESO -->
+        <div class="progress-container">
+            <div class="progress-header">
+                <span>Progreso del Calendario ✨</span>
+                <span id="progress-text">0 / 55 Regalitos</span>
+            </div>
+            <div class="progress-bar-bg">
+                <div class="progress-bar-fill" id="progress-fill"></div>
+            </div>
+        </div>
+
+        <!-- CONTADOR PRINCIPAL (Actualizado al título del gran regalo) -->
+        <div class="countdown-wrapper" style="margin-top: 15px;">
+            <h3 style="color: #fbbf24; font-family: 'Dancing Script', cursive; font-size: 1.8rem; margin-bottom: 10px; text-shadow: 0 0 10px rgba(251,191,36,0.4);">
+                🎁 Tiempo para el Gran Regalo 🎁
+            </h3>
+            <div class="countdown-container">
+                <div class="countdown-box">
+                    <span id="days">00</span>
+                    <span class="countdown-label">DÍAS</span>
+                </div>
+                <div class="countdown-box">
+                    <span id="hours">00</span>
+                    <span class="countdown-label">HORAS</span>
+                </div>
+                <div class="countdown-box">
+                    <span id="mins">00</span>
+                    <span class="countdown-label">MINS</span>
+                </div>
+                <div class="countdown-box">
+                    <span id="secs">00</span>
+                    <span class="countdown-label">SEGS</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="counters-bar">
+            <button class="counter-btn" id="btn-hug">
+                <span>Abrazos virtuales 𓆩♡𓆪</span>
+                <span id="count-hugs">0</span>
+            </button>
+            <button class="counter-btn" id="btn-kiss">
+                <span>Besos virtuales 𓆩♡𓆪</span>
+                <span id="count-kisses">0</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- CONTENEDOR NUEVO: Tablero de Calendario Mágico -->
+    <div class="calendar-board-wrapper">
+        <div class="calendar-board-title">🎄 Calendario de Sorpresas ✨</div>
+        <main class="grid-container" id="advent-grid"></main>
+    </div>
+
+    <!-- Modal de los Días Abiertos -->
+    <div class="modal-overlay" id="modal">
+        <div class="modal-content">
+            <button class="close-btn" id="modal-close">&times;</button>
+            <h2 id="modal-title" style="color: var(--accent)"></h2>
+            <div class="modal-body" id="modal-body"></div>
+            <div class="media-container" id="modal-media"></div>
+        </div>
+    </div>
+
+    <!-- Modal de Día Bloqueado -->
+    <div class="modal-overlay" id="locked-modal">
+        <div class="locked-modal-content">
+            <span class="locked-icon">🔒✨</span>
+            <h3>¡Aúuun no, mi linda!</h3>
+            <p id="locked-modal-msg">Aún no es hora de abrir este regalito jeje...</p>
+            <button class="locked-btn-ok" id="locked-modal-close">Entendido jiji 💕</button>
+        </div>
+    </div>
+
+    <!-- Modal Emergente de Abrazos / Besos -->
+    <div class="love-popup-overlay" id="love-popup">
+        <div class="love-popup-content">
+            <button class="love-popup-close" id="love-popup-close">&times;</button>
+            <h3 id="love-popup-title">¡Te envío un abrazo enorme! 🤗</h3>
+            <img id="love-popup-gif" src="" alt="GIF de amor" />
+            <p id="love-popup-msg">¡Cada clic es un pedacito de mi corazón contigo!</p>
+        </div>
+    </div>
+
+    <!-- Panel de Edición Secretito (Modo Admin) -->
+    <div id="editor-modal" class="modal-overlay">
+        <div class="modal-content" style="border-color: #38bdf8;">
+            <button id="editor-close" class="close-btn">&times;</button>
+            <h2 style="font-family: 'Dancing Script', cursive; font-size: 2rem; color: #38bdf8; margin-bottom: 15px;">
+                Editar Día <span id="edit-day-num"></span> ✍️
+            </h2>
+
+            <div style="text-align: left; display: flex; flex-direction: column; gap: 10px;">
+                <label style="font-size: 0.85rem; color: #94a3b8;">Título del día:</label>
+                <input type="text" id="edit-title" style="width:100%; padding:8px 12px; background:rgba(15,23,42,0.8); border:1px solid #475569; border-radius:10px; color:white; outline:none;" />
+
+                <label style="font-size: 0.85rem; color: #94a3b8;">Mensaje romántico:</label>
+                <textarea id="edit-content" rows="4" style="width:100%; padding:8px 12px; background:rgba(15,23,42,0.8); border:1px solid #475569; border-radius:10px; color:white; outline:none; resize:vertical;"></textarea>
+
+                <div class="color-picker-group">
+                    <label for="edit-color">Color del texto:</label>
+                    <input type="color" id="edit-color" value="#e2e8f0" />
+                </div>
+
+                <label style="font-size: 0.85rem; color: #94a3b8;">Tipo de regalo:</label>
+                <select id="edit-type" style="width:100%; padding:8px 12px; background:rgba(15,23,42,0.8); border:1px solid #475569; border-radius:10px; color:white; outline:none;">
+                    <option value="text">Solo texto / Carta</option>
+                    <option value="image">Foto / Imagen</option>
+                    <option value="audio">Audio / Nota de voz</option>
+                    <option value="video">Video</option>
+                </select>
+
+                <label style="font-size: 0.85rem; color: #94a3b8;">Subir archivo desde tu equipo:</label>
+                <input type="file" id="edit-file" accept="image/*,audio/*,video/*" style="font-size:0.8rem; color:#cbd5e1;" />
+            </div>
+
+            <div class="editor-buttons">
+                <button id="editor-preview" class="btn-preview" style="flex:1;">👁️ Vista Previa</button>
+                <button id="editor-save" class="locked-btn-ok" style="flex:1; background:linear-gradient(135deg, #22c55e, #16a34a);">Guardar Cambios ✨</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- REPRODUCTOR FLOTANTE TIPO JUEGO (Jukebox) -->
+    <div class="music-widget" id="music-widget">
+        <!-- Disco de Vinilo que gira -->
+        <div class="vinyl-disc" id="vinyl-disc">
+            <div class="vinyl-label"></div>
+        </div>
+
+        <div class="music-controls-group">
+            <div class="music-top-row">
+                <button class="music-player-btn" id="music-btn" title="Reproducir / Pausa">
+                    <span id="music-icon">▶️</span>
+                </button>
+                <select id="song-select" class="music-select" title="Escoge tu canción favorita">
+                    <!-- Se llena automático con la playlist -->
+                </select>
+                <button class="music-next-btn" id="next-song-btn" title="Canción aleatoria">🔀</button>
+            </div>
+            
+            <!-- Barritas de sonido estilo discoteca (Equalizer) -->
+            <div class="equalizer" id="equalizer">
+                <div class="eq-bar"></div>
+                <div class="eq-bar"></div>
+                <div class="eq-bar"></div>
+                <div class="eq-bar"></div>
+            </div>
+        </div>
+    </div>
+    <audio id="bg-music"></audio>
+
+    <!-- Scripts al final, cargados en orden correcto -->
+    <script src="datos.js"></script>
+    <script src="app.js"></script>
+    <script src="features.js"></script>
+</body>
+</html>
