@@ -1,3 +1,19 @@
+// --- CONFIGURACIÓN DE CONEXIÓN A GITHUB ---
+const GITHUB_USER = "enderflash356";
+const GITHUB_REPO = "regalo-navidad";
+
+// Obtener el token de forma segura desde el navegador (se pedirá solo 1 vez)
+function getGitHubToken() {
+    let token = localStorage.getItem('gf_gh_token');
+    if (!token) {
+        token = prompt("🔒 Pega tu Token de GitHub por única vez para activar el editor:");
+        if (token) {
+            localStorage.setItem('gf_gh_token', token.trim());
+        }
+    }
+    return token ? token.trim() : "";
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     const gridContainer = document.getElementById('advent-grid');
     const modal = document.getElementById('modal');
@@ -300,9 +316,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const kissGifs = ["gifs/gif-beso-1.gif", "gifs/gif-beso-2.gif", "gifs/gif-beso-3.gif"];
     const loveMessages = [
         "¡Un abracito de osito para que recuerdes cuánto te amo! ✨",
-        "¡Te mando muuuuuchos besitos para llenar tu día de luz y amor je! ",
-        "¡Recuerda que eres lo más bonito, tierno y especial que tengo en mi vida  mi niña preciosa! 🥰",
-        "¡Un besote enorme hasta peru, te amo mi linda jiji!"
+        "¡Te mando muuuuuchos besitos para llenar tu día de luz y amor je! 💖",
+        "¡Recuerda que eres lo más bonito, tierno y especial que tengo en mi vida, mi niña preciosa! 🥰",
+        "¡Un besote enorme hasta Perú, te amo mi linda jiji! 💌"
     ];
 
     let hugs = parseInt(localStorage.getItem('gf_hugs') || '0');
@@ -540,11 +556,12 @@ document.addEventListener('DOMContentLoaded', () => {
     if (editorClose) editorClose.addEventListener('click', () => editorModal.classList.remove('active'));
     if (editorModal) editorModal.addEventListener('click', (e) => { if (e.target === editorModal) editorModal.classList.remove('active'); });
 
+    // --- GUARDAR CAMBIOS AUTOMÁTICAMENTE EN GITHUB (CON TOKEN SEGURO) ---
     if (editorSave) {
-        editorSave.addEventListener('click', () => {
+        editorSave.addEventListener('click', async () => {
             const file = editFile.files[0];
             
-            function saveDayData(mediaUrl = null) {
+            async function pushToGitHub(newMediaUrl = null) {
                 const activeDaysData = getDaysData();
                 const currentItem = activeDaysData.find(d => d.day === currentEditingDay);
 
@@ -553,22 +570,92 @@ document.addEventListener('DOMContentLoaded', () => {
                     content: editContent.value,
                     type: editType.value,
                     textColor: editColor ? editColor.value : '#e2e8f0',
-                    mediaUrl: mediaUrl !== null ? mediaUrl : (currentItem ? currentItem.mediaUrl : "")
+                    mediaUrl: newMediaUrl !== null ? newMediaUrl : (currentItem ? currentItem.mediaUrl : "")
                 };
 
+                // Actualizar localStorage también
                 localStorage.setItem('gf_advent_custom', JSON.stringify(savedCustomData));
-                editorModal.classList.remove('active');
-                renderGrid();
+
+                // Construir el archivo datos.js actualizado
+                const updatedArray = activeDaysData.map(item => {
+                    const custom = savedCustomData[item.day] || {};
+                    return {
+                        day: item.day,
+                        date: item.date,
+                        title: custom.title !== undefined ? custom.title : (item.title || ""),
+                        content: custom.content !== undefined ? custom.content : (item.content || ""),
+                        type: custom.type !== undefined ? custom.type : (item.type || "text"),
+                        textColor: custom.textColor !== undefined ? custom.textColor : (item.textColor || "#e2e8f0"),
+                        mediaUrl: custom.mediaUrl !== undefined ? custom.mediaUrl : (item.mediaUrl || "")
+                    };
+                });
+
+                const fileContentString = `const adventDaysData = ${JSON.stringify(updatedArray, null, 4)};`;
+                const encodedContent = btoa(unescape(encodeURIComponent(fileContentString)));
+
+                editorSave.textContent = "Guardando en la nube... ⏳";
+                editorSave.disabled = true;
+
+                try {
+                    const GITHUB_TOKEN = getGitHubToken();
+                    if (!GITHUB_TOKEN) {
+                        alert("Se requiere el token de GitHub para guardar.");
+                        return;
+                    }
+
+                    // 1. Obtener el SHA actual del archivo datos.js en GitHub
+                    const getUrl = `https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents/datos.js`;
+                    const getRes = await fetch(getUrl, {
+                        headers: { "Authorization": `token ${GITHUB_TOKEN}` }
+                    });
+
+                    if (!getRes.ok) {
+                        alert("Token inválido o error de autenticación con GitHub.");
+                        localStorage.removeItem('gf_gh_token'); // Limpiar token malo si falla
+                        return;
+                    }
+
+                    const fileData = await getRes.json();
+                    const fileSha = fileData.sha;
+
+                    // 2. Enviar el commit automático con los nuevos datos
+                    const putRes = await fetch(getUrl, {
+                        method: "PUT",
+                        headers: {
+                            "Authorization": `token ${GITHUB_TOKEN}`,
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({
+                            message: `Actualización automática del Día ${currentEditingDay} desde el Editor ✨`,
+                            content: encodedContent,
+                            sha: fileSha
+                        })
+                    });
+
+                    if (putRes.ok) {
+                        alert("¡Guardado y publicado en la web con éxito! 💖");
+                        editorModal.classList.remove('active');
+                        renderGrid();
+                    } else {
+                        alert("Hubo un error al sincronizar con GitHub.");
+                    }
+                } catch (err) {
+                    console.error(err);
+                    alert("Error de conexión con GitHub.");
+                } finally {
+                    editorSave.textContent = "Guardar Cambios ✨";
+                    editorSave.disabled = false;
+                }
             }
 
             if (file) {
                 const reader = new FileReader();
                 reader.onload = function(uploadEvent) {
-                    saveDayData(uploadEvent.target.result);
+                    pushToGitHub(uploadEvent.target.result);
                 };
                 reader.readAsDataURL(file);
             } else {
-                saveDayData(null);
+                pushToGitHub(null);
             }
         });
     }
