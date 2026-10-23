@@ -5,7 +5,7 @@ const adventDaysData = [
         "title": "¡Bienvenida a tu Calendario de Sorpresas mi princesa del sol y mi vida! 💖",
         "content": "Hola mi niña hermosa jiji... Eres tan especial para mi que no te daré un regalo... sino que 55 regalos, cada día podrás venir y encontrar uno nuevo para ti. Espero te gusten mucho los regalos... y quiero ser el primero que te de tantos regalos para demostrarte un poco de lo mucho que siento por ti :3",
         "type": "text",
-        "textColor": "#e68600",
+        "textColor": "#0552a3",
         "mediaUrl": ""
     },
     {
