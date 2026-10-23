@@ -173,6 +173,13 @@
     <audio id="bg-music"></audio>
 
     <!-- Scripts al final, cargados en orden correcto -->
+
+    <script>
+    // Carga datos.js siempre fresco sin caché
+    const script = document.createElement('script');
+    script.src = 'datos.js?v=' + new Date().getTime();
+    document.head.appendChild(script);
+</script>
     <script src="datos.js"></script>
     <script src="app.js"></script>
     <script src="features.js"></script>
