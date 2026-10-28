@@ -20,10 +20,10 @@ const adventDaysData = [
     {
         "day": 2,
         "date": "2026-11-02",
-        "title": "Dia 2: ",
-        "content": "",
-        "type": "audio",
-        "textColor": "#e2e8f0",
+        "title": "Dia 2: Un poco de lo mucho que me gusta de ti....",
+        "content": "A veces me pongo a pensar en todo lo que me gusta de ti y la verdad es que la lista se queda corta, pero lo que más agradezco todos los días es simplemente tenerte en mi vida. \n\nMe encantan tus audios, escuchar tu voz me parece de lo más hermoso, tranquilizador y relajante del mundo; da igual la hora o cómo vaya mi día, oírte siempre me alegra el dia.\n\nDisfruto tanto cuando nos mandamos fotos, videos o mensajitos, y aunque ahorita no jugamos mucho porque siempre ando ocupado, pero los ratos que sí coincidimos y nos ponemos a jugar o hablar un rato se vuelven de lo más divertido. Me da risa y me llena el corazón nuestra costumbre de siempre andar viendo quién ama más al otro; cuando yo digo doble, tú dices triple y así nos vamos, porque esos pequeños juegos tontos me hacen sentir increíblemente amado.\n\nMe fascina tu sentido del humor, tus manías, tus locuras y la libertad que tengo para hablar contigo de lo que sea. Amo que me aguantes y que siempre estés ahí para apoyarme. Y de verdad, cuando me dijiste aquella vez que me ibas a amar más que todas las personas de mi vida juntas, se me quedó grabada el alma. Pienso mucho en el día en que por fin podamos vernos; lo único que quiero es dar mi primer beso contigo mientras nos tomamos de la mano, y luego hacer todas esas cosas que ya dijimos. Porque al final, cuando hablo contigo, siento que el mundo deja de existir y por un rato simplemente olvido lo demás.",
+        "type": "text",
+        "textColor": "#24bd05",
         "mediaUrl": ""
     },
     {
