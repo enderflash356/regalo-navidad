@@ -56,10 +56,10 @@ const adventDaysData = [
     {
         "day": 6,
         "date": "2026-11-06",
-        "title": "Dia 6: ",
-        "content": "",
-        "type": "text",
-        "textColor": "#e2e8f0",
+        "title": "Dia 6: Cancion de cuna jiji",
+        "content": "Me contaste que te gustaba esta canción de cuna y te dije que te la iba a cantar un dia no? Bueno, pues aqui esta... espero te guste je, no soy muy bueno cantando bleh",
+        "type": "audio",
+        "textColor": "#00ffaa",
         "mediaUrl": ""
     },
     {
