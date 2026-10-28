@@ -38,10 +38,10 @@ const adventDaysData = [
     {
         "day": 4,
         "date": "2026-11-04",
-        "title": "Dia 4: ",
-        "content": "",
-        "type": "text",
-        "textColor": "#e2e8f0",
+        "title": "Dia 4: Cositas que hice en secreto para estar juntos...",
+        "content": "Aqui te cuento unas cositas que hice para poder hablar un poco más contigo y más...",
+        "type": "audio",
+        "textColor": "#ff4000",
         "mediaUrl": ""
     },
     {
