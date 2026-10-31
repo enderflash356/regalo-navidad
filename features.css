@@ -1534,3 +1534,249 @@ body::before {
     cursor: pointer;
     background: none;
 }
+
+.modal-overlay {
+    background: rgba(5, 5, 15, 0.92) !important;
+    backdrop-filter: blur(14px) !important;
+}
+
+/* Contenedor principal con diseño de carta postal / papel antiguo */
+.modal-content {
+    background: linear-gradient(135deg, #fffdf9 0%, #fef3e4 100%) !important;
+    border: 3px solid #d4af37 !important; /* Marco dorado elegante estilo vintage */
+    border-radius: 22px !important;
+    padding: 50px 35px 35px 35px !important;
+    max-width: 540px !important;
+    width: 92% !important;
+    max-height: 85vh !important;
+    overflow-y: auto !important;
+    text-align: left !important; /* Alineación de carta tradicional */
+    position: relative !important;
+    box-shadow: 0 30px 70px rgba(0, 0, 0, 0.85), inset 0 0 50px rgba(212, 175, 55, 0.15) !important;
+    color: #3b2219 !important;
+    transform: scale(0.9) translateY(20px);
+    transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.modal-overlay.active .modal-content {
+    transform: scale(1) translateY(0);
+}
+
+/* Solapa decorativa superior tipo sobre de carta romántica */
+.modal-content::before {
+    content: '💌';
+    position: absolute;
+    top: -24px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 2.2rem;
+    background: #fffdf9;
+    padding: 2px 16px;
+    border-radius: 50%;
+    border: 2px solid #d4af37;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+/* Título de la carta (Rojo vino profundo muy elegante y romántico) */
+.modal-content h2, .modal-content h3 {
+    font-family: 'Dancing Script', cursive !important;
+    color: #881337 !important;
+    font-size: 2.7rem !important;
+    text-align: center !important;
+    margin-bottom: 25px !important;
+    text-shadow: 0 2px 5px rgba(136, 19, 55, 0.15) !important;
+    border-bottom: 2px dashed rgba(212, 175, 55, 0.4);
+    padding-bottom: 15px;
+    line-height: 1.2 !important;
+}
+
+/* Cuerpo del mensaje con estilo de texto escrito a carta / papel pulcro */
+.modal-body {
+    margin-top: 15px !important;
+    line-height: 1.9 !important;
+    color: #2c1810 !important;
+    white-space: pre-wrap !important;
+    font-size: 1.12rem !important;
+    font-family: 'Inter', system-ui, sans-serif !important;
+    text-align: left !important;
+    background: rgba(255, 255, 255, 0.6) !important;
+    padding: 22px !important;
+    border-radius: 14px !important;
+    border: 1px solid rgba(212, 175, 55, 0.3) !important;
+    box-shadow: inset 0 2px 5px rgba(0,0,0,0.02);
+}
+
+/* Botón de cierre elegante en la esquina superior */
+.close-btn {
+    position: absolute;
+    top: 15px; 
+    right: 20px;
+    background: rgba(136, 19, 55, 0.1) !important;
+    border: 1px solid #881337 !important;
+    border-radius: 50% !important;
+    width: 36px !important;
+    height: 36px !important;
+    cursor: pointer;
+    color: #881337 !important;
+    font-size: 1.3rem !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    z-index: 10;
+}
+
+.close-btn:hover {
+    background: #881337 !important;
+    color: white !important;
+    transform: scale(1.12);
+}
+
+/* Ajustes para que las imágenes o reproductores dentro de la carta combinen perfecto */
+.media-container img, .media-container audio, .media-container video {
+    border: 1px solid rgba(212, 175, 55, 0.4) !important;
+    border-radius: 12px !important;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+/* ========================================================== */
+/* --- FLECHITAS DE NAVEGACIÓN TIPO SLIDE A LOS LADOS --- */
+/* ========================================================== */
+
+.slide-nav-btn {
+    position: absolute !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    background: linear-gradient(135deg, #fffdf9 0%, #fef3e4 100%) !important;
+    border: 2px solid #d4af37 !important; /* Marco dorado elegante a juego */
+    color: #881337 !important; /* Rojo vino romántico */
+    font-size: 2rem !important;
+    width: 44px !important;
+    height: 44px !important;
+    border-radius: 50% !important;
+    cursor: pointer !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25), inset 0 0 10px rgba(212, 175, 55, 0.2) !important;
+    transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+    z-index: 20 !important;
+    line-height: 1 !important;
+    padding-bottom: 3px !important;
+}
+
+/* Posición exacta a los costados de la carta como en tu dibujo */
+#modal-prev-btn {
+    left: -22px !important;
+}
+
+#modal-next-btn {
+    right: -22px !important;
+}
+
+/* Efecto hover súper bonito cuando pases el mouse o toques */
+.slide-nav-btn:hover:not(:disabled) {
+    background: #881337 !important;
+    color: #ffffff !important;
+    border-color: #881337 !important;
+    transform: translateY(-50%) scale(1.15) !important;
+    box-shadow: 0 8px 25px rgba(136, 19, 55, 0.45) !important;
+}
+
+/* Estado deshabilitado (por ejemplo, si estás en el día 1 y no hay anterior) */
+.slide-nav-btn:disabled {
+    opacity: 0.35 !important;
+    cursor: not-allowed !important;
+    filter: grayscale(100%);
+}
+
+/* Ajuste responsive para celulares pequeños para que no se salgan de la pantalla */
+@media (max-width: 550px) {
+    #modal-prev-btn { left: 8px !important; }
+    #modal-next-btn { right: 8px !important; }
+}
+
+/* ========================================================== */
+/* --- REDISEÑO DEL PANEL EDITOR (MODO ADMIN) --- */
+/* ========================================================== */
+
+#editor-modal .modal-content {
+    background: linear-gradient(145deg, #0f172a 0%, #1e1b4b 100%) !important;
+    border: 2px solid #38bdf8 !important;
+    border-radius: 28px !important;
+    padding: 35px 25px !important;
+    max-width: 500px !important;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), 0 0 30px rgba(56, 189, 248, 0.25) !important;
+}
+
+#editor-modal .modal-content h2 {
+    font-family: 'Dancing Script', cursive !important;
+    font-size: 2.4rem !important;
+    color: #38bdf8 !important;
+    text-align: center !important;
+    margin-bottom: 20px !important;
+    text-shadow: 0 0 12px rgba(56, 189, 248, 0.4) !important;
+    border-bottom: 1px solid rgba(56, 189, 248, 0.2);
+    padding-bottom: 10px;
+}
+
+#editor-modal label {
+    font-family: 'Inter', sans-serif !important;
+    font-size: 0.85rem !important;
+    font-weight: 600 !important;
+    color: #94a3b8 !important;
+    margin-top: 4px;
+}
+
+#editor-modal input[type="text"],
+#editor-modal textarea,
+#editor-modal select {
+    font-family: 'Inter', sans-serif !important;
+    background: rgba(15, 23, 42, 0.85) !important;
+    border: 1px solid rgba(56, 189, 248, 0.3) !important;
+    border-radius: 14px !important;
+    padding: 10px 14px !important;
+    color: #f8fafc !important;
+    font-size: 0.95rem !important;
+    transition: all 0.2s ease !important;
+}
+
+#editor-modal input[type="text"]:focus,
+#editor-modal textarea:focus,
+#editor-modal select:focus {
+    border-color: #38bdf8 !important;
+    box-shadow: 0 0 12px rgba(56, 189, 248, 0.3) !important;
+}
+
+.color-picker-group {
+    background: rgba(15, 23, 42, 0.6);
+    padding: 8px 14px;
+    border-radius: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.editor-buttons {
+    display: flex;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+.btn-preview {
+    background: linear-gradient(135deg, #a855f7 0%, #6366f1 100%) !important;
+    color: white !important;
+    border: none !important;
+    padding: 12px 18px !important;
+    border-radius: 20px !important;
+    font-weight: 700 !important;
+    cursor: pointer !important;
+    box-shadow: 0 4px 15px rgba(168, 85, 247, 0.4) !important;
+    transition: transform 0.2s !important;
+}
+
+.btn-preview:hover {
+    transform: translateY(-2px) scale(1.02) !important;
+    box-shadow: 0 6px 20px rgba(168, 85, 247, 0.6) !important;
+}

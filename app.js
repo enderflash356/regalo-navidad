@@ -538,17 +538,31 @@ document.addEventListener('DOMContentLoaded', () => {
         if (editorModal) editorModal.classList.add('active');
     }
 
-    // Botón de Vista Previa en el Editor
+    // Botón de Vista Previa en el Editor (Corregido)
     if (editorPreview) {
         editorPreview.addEventListener('click', () => {
+            const activeDaysData = getDaysData();
+            const currentItem = activeDaysData.find(d => d.day === currentEditingDay) || {};
+
+            let previewMediaUrl = currentItem.mediaUrl || "";
+            if (editFile && editFile.files && editFile.files[0]) {
+                previewMediaUrl = URL.createObjectURL(editFile.files[0]);
+            }
+
             const tempItem = {
                 day: currentEditingDay,
-                title: editTitle.value,
-                content: editContent.value,
-                type: editType.value,
-                textColor: editColor ? editColor.value : '#e2e8f0',
-                mediaUrl: (editFile && editFile.files[0]) ? URL.createObjectURL(editFile.files[0]) : (savedCustomData[currentEditingDay]?.mediaUrl || "")
+                date: currentItem.date || "2026-12-01",
+                title: editTitle.value || `Día ${currentEditingDay}`,
+                content: editContent.value || '',
+                type: editType.value || 'text',
+                textColor: editColor ? editColor.value : '#2c1810',
+                mediaUrl: previewMediaUrl
             };
+
+            // Cerrar el editor temporalmente para mostrar la carta
+            if (editorModal) editorModal.classList.remove('active');
+            
+            // Abrir la carta con los datos modificados
             openModal(tempItem);
         });
     }
@@ -718,4 +732,75 @@ document.addEventListener('DOMContentLoaded', () => {
 
     renderFilterBar();
     renderGrid();
+
+
+    // --- LÓGICA DE NAVEGACIÓN TIPO SLIDE PARA LAS CARTAS ---
+    let currentOpenDayNum = 1;
+
+    // Actualizamos openModal para guardar el día actual
+    const originalOpenModal = openModal;
+    openModal = function(item) {
+        currentOpenDayNum = item.day;
+        originalOpenModal(item);
+        updateSlideButtonsState();
+    };
+
+    function navigateSlide(direction) {
+        const activeDaysData = getDaysData();
+        // Buscamos el índice actual en la lista de días
+        const currentIndex = activeDaysData.findIndex(d => d.day === currentOpenDayNum);
+        
+        if (currentIndex === -1) return;
+        
+        const nextIndex = currentIndex + direction;
+        
+        // Validar que exista el día anterior o siguiente en la lista
+        if (nextIndex >= 0 && nextIndex < activeDaysData.length) {
+            const nextItem = activeDaysData[nextIndex];
+            
+            // Verificamos si el día está desbloqueado antes de dejarlo pasar
+            const peruNow = getPeruDate();
+            const todayPeru = peruNow.toISOString().split('T')[0];
+            const isDayZero = (nextItem.day === 0);
+            const isGrandGift = (nextItem.day === 55);
+            const isUnlocked = isDayZero || devMode || (todayPeru >= nextItem.date);
+
+            if (isUnlocked) {
+                openModal(nextItem);
+            } else {
+                showLockedModal(nextItem.date);
+            }
+        }
+    }
+
+    function updateSlideButtonsState() {
+        const activeDaysData = getDaysData();
+        const currentIndex = activeDaysData.findIndex(d => d.day === currentOpenDayNum);
+        
+        const prevBtn = document.getElementById('modal-prev-btn');
+        const nextBtn = document.getElementById('modal-next-btn');
+
+        if (prevBtn) prevBtn.disabled = (currentIndex <= 0);
+        if (nextBtn) nextBtn.disabled = (currentIndex >= activeDaysData.length - 1 || currentIndex === -1);
+    }
+
+    // Eventos para las flechitas del modal
+    const prevBtn = document.getElementById('modal-prev-btn');
+    const nextBtn = document.getElementById('modal-next-btn');
+
+    if (prevBtn) {
+        prevBtn.addEventListener('click', () => navigateSlide(-1));
+    }
+    if (nextBtn) {
+        nextBtn.addEventListener('click', () => navigateSlide(1));
+    }
+
+    // Control por teclado (Flecha izquierda y flecha derecha)
+    document.addEventListener('keydown', (e) => {
+        const modal = document.getElementById('modal');
+        if (modal && modal.classList.contains('active')) {
+            if (e.key === 'ArrowLeft') navigateSlide(-1);
+            if (e.key === 'ArrowRight') navigateSlide(1);
+        }
+    });
 });
