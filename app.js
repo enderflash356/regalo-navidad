@@ -672,9 +672,31 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             if (file) {
+                // Si hay un archivo multimedia, lo subimos directo sin saturar el localStorage
                 const reader = new FileReader();
                 reader.onload = function(uploadEvent) {
-                    pushToGitHub(uploadEvent.target.result);
+                    const base64Content = uploadEvent.target.result;
+                    
+                    // Guardamos solo los textos en el localStorage de forma segura
+                    savedCustomData[currentEditingDay] = {
+                        title: editTitle ? editTitle.value : '',
+                        content: editContent ? editContent.value : '',
+                        type: editType ? editType.value : 'text',
+                        textColor: editColor ? editColor.value : '#2c1810',
+                        mediaUrl: base64Content
+                    };
+                    
+                    try {
+                        // Intentamos guardar una versión ligera o limpiar caché viejo
+                        const lightStorage = { ...savedCustomData };
+                        lightStorage[currentEditingDay].mediaUrl = "[Archivo en GitHub]";
+                        localStorage.setItem('gf_advent_custom', JSON.stringify(lightStorage));
+                    } catch (e) {
+                        localStorage.removeItem('gf_advent_custom');
+                    }
+
+                    // Enviamos directamente a GitHub con la URL completa
+                    pushToGitHubDirect(base64Content);
                 };
                 reader.readAsDataURL(file);
             } else {
