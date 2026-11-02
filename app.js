@@ -398,12 +398,18 @@ document.addEventListener('DOMContentLoaded', () => {
     if (lockedModalClose) lockedModalClose.addEventListener('click', () => lockedModal.classList.remove('active'));
     if (lockedModal) lockedModal.addEventListener('click', (e) => { if (e.target === lockedModal) lockedModal.classList.remove('active'); });
 
-    function renderGrid() {
+   function renderGrid() {
         if (!gridContainer) return;
         gridContainer.innerHTML = '';
         
-        const peruNow = getPeruDate();
-        const todayPeru = peruNow.toISOString().split('T')[0];
+        // Obtenemos la fecha exacta en formato string local de Perú (YYYY-MM-DD)
+        const peruFormatter = new Intl.DateTimeFormat('en-CA', {
+            timeZone: 'America/Lima',
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit'
+        });
+        const todayPeru = peruFormatter.format(getPeruDate());
 
         const activeDaysData = getDaysData();
         let unlockedCount = 0;
