@@ -133,7 +133,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (noteInterval) { clearInterval(noteInterval); noteInterval = null; }
     }
 
-    // --- MÚSICA AUTOMÁTICA Y ALEATORIA AL ENTRAR ---
     if (bgMusic && playlist.length > 0) {
         const randomStart = Math.floor(Math.random() * playlist.length);
         loadTrack(randomStart);
@@ -211,6 +210,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let devMode = false;
     let currentEditingDay = null;
+    let currentOpenDayNum = 1;
     let currentFilter = 'all';
     let favorites = JSON.parse(localStorage.getItem('gf_favorites')) || [];
 
@@ -250,7 +250,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (title) title.after(filterBar);
     }
 
-    // --- CONTADOR PRINCIPAL PARA EL GRAN REGALO (25 DE DICIEMBRE EN HORA PERÚ) ---
+    // --- CONTADOR PRINCIPAL ---
     function updateCountdown() {
         const christmasDate = new Date('2026-12-25T00:00:00-05:00').getTime();
         const nowPeru = getPeruDate().getTime();
@@ -317,7 +317,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const loveMessages = [
         "¡Un abracito de osito para que recuerdes cuánto te amo! ✨",
         "¡Te mando muuuuuchos besitos para llenar tu día de luz y amor je! 💖",
-        "¡Recuerda que eres lo más bonito, tierno y especial que tengo en mi vida, mi niña preciosa! 🥰",
+        "¡Recuerda que eres lo más bonito, tierno y especial que tengo en my vida, mi niña preciosa! 🥰",
         "¡Un besote enorme hasta Perú, te amo mi linda jiji! 💌"
     ];
 
@@ -402,7 +402,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!gridContainer) return;
         gridContainer.innerHTML = '';
         
-        // Fecha actual exacta en Perú formateada en YYYY-MM-DD
         const peruNow = getPeruDate();
         const todayPeru = peruNow.toISOString().split('T')[0];
 
@@ -415,7 +414,6 @@ document.addEventListener('DOMContentLoaded', () => {
             const isUnlocked = isDayZero || devMode || (todayPeru >= item.date);
             const isFav = favorites.includes(item.day);
 
-            // Filtrado de elementos
             if (currentFilter !== 'all') {
                 if (currentFilter === 'fav' && !isFav) return;
                 if (currentFilter !== 'fav' && item.type !== currentFilter && !isDayZero && !isGrandGift) return;
@@ -435,8 +433,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (!isUnlocked) {
                 card.classList.add('locked');
-                
-                // Cálculo de tiempo restante basado en la medianoche de Perú (UTC-5)
                 const unlockDate = new Date(`${item.date}T00:00:00-05:00`);
                 const diff = unlockDate.getTime() - peruNow.getTime();
 
@@ -483,7 +479,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 `;
             }
 
-            // Manejo de clic en favorito
             const favBtn = card.querySelector('.fav-btn');
             if (favBtn) {
                 favBtn.addEventListener('click', (e) => {
@@ -498,7 +493,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
             }
 
-            // Abrir carta en vista previa (o alert de bloqueado)
             card.addEventListener('click', () => {
                 if (isUnlocked) {
                     card.classList.add('opening');
@@ -538,7 +532,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (editorModal) editorModal.classList.add('active');
     }
 
-    // Botón de Vista Previa en el Editor (Corregido)
+    // Botón de Vista Previa en el Editor
     if (editorPreview) {
         editorPreview.addEventListener('click', () => {
             const activeDaysData = getDaysData();
@@ -559,10 +553,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 mediaUrl: previewMediaUrl
             };
 
-            // Cerrar el editor temporalmente para mostrar la carta
             if (editorModal) editorModal.classList.remove('active');
-            
-            // Abrir la carta con los datos modificados
             openModal(tempItem);
         });
     }
@@ -570,27 +561,30 @@ document.addEventListener('DOMContentLoaded', () => {
     if (editorClose) editorClose.addEventListener('click', () => editorModal.classList.remove('active'));
     if (editorModal) editorModal.addEventListener('click', (e) => { if (e.target === editorModal) editorModal.classList.remove('active'); });
 
-    // --- GUARDAR CAMBIOS AUTOMÁTICAMENTE EN GITHUB (CON TOKEN SEGURO) ---
+    // --- GUARDAR CAMBIOS AUTOMÁTICAMENTE EN GITHUB ---
     if (editorSave) {
         editorSave.addEventListener('click', async () => {
-            const file = editFile.files[0];
+            if (currentEditingDay === null || currentEditingDay === undefined) {
+                alert("Error: No hay ningún día seleccionado para editar.");
+                return;
+            }
+
+            const file = editFile && editFile.files ? editFile.files[0] : null;
             
             async function pushToGitHub(newMediaUrl = null) {
                 const activeDaysData = getDaysData();
-                const currentItem = activeDaysData.find(d => d.day === currentEditingDay);
+                const currentItem = activeDaysData.find(d => d.day === currentEditingDay) || {};
 
                 savedCustomData[currentEditingDay] = {
-                    title: editTitle.value,
-                    content: editContent.value,
-                    type: editType.value,
+                    title: editTitle ? editTitle.value : '',
+                    content: editContent ? editContent.value : '',
+                    type: editType ? editType.value : 'text',
                     textColor: editColor ? editColor.value : '#e2e8f0',
-                    mediaUrl: newMediaUrl !== null ? newMediaUrl : (currentItem ? currentItem.mediaUrl : "")
+                    mediaUrl: newMediaUrl !== null ? newMediaUrl : (currentItem.mediaUrl || "")
                 };
 
-                // Actualizar localStorage también
                 localStorage.setItem('gf_advent_custom', JSON.stringify(savedCustomData));
 
-                // Construir el archivo datos.js actualizado
                 const updatedArray = activeDaysData.map(item => {
                     const custom = savedCustomData[item.day] || {};
                     return {
@@ -617,7 +611,6 @@ document.addEventListener('DOMContentLoaded', () => {
                         return;
                     }
 
-                    // 1. Obtener el SHA actual del archivo datos.js en GitHub
                     const getUrl = `https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents/datos.js`;
                     const getRes = await fetch(getUrl, {
                         headers: { "Authorization": `token ${GITHUB_TOKEN}` }
@@ -625,14 +618,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     if (!getRes.ok) {
                         alert("Token inválido o error de autenticación con GitHub.");
-                        localStorage.removeItem('gf_gh_token'); // Limpiar token malo si falla
+                        localStorage.removeItem('gf_gh_token');
                         return;
                     }
 
                     const fileData = await getRes.json();
                     const fileSha = fileData.sha;
 
-                    // 2. Enviar el commit automático con los nuevos datos
                     const putRes = await fetch(getUrl, {
                         method: "PUT",
                         headers: {
@@ -674,7 +666,11 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // --- FUNCIÓN OPENMODAL (CON SOPORTE DE NAVEGACIÓN SLIDE INTEGRADO) ---
     function openModal(item) {
+        currentOpenDayNum = item.day;
+        updateSlideButtonsState();
+
         if (modalTitle) modalTitle.textContent = item.title || `Día ${item.day}`;
         if (modalBody) {
             modalBody.textContent = item.content || 'Muy pronto jejeje...';
@@ -686,7 +682,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         if (modalMedia) modalMedia.innerHTML = '';
 
-        // Botón rápido para abrir editor si estás en Modo Pruebas
         if (devMode) {
             const editBtnBtn = document.createElement('button');
             editBtnBtn.textContent = '✏️ Editar este Día';
@@ -698,7 +693,6 @@ document.addEventListener('DOMContentLoaded', () => {
             modalMedia.appendChild(editBtnBtn);
         }
 
-        // Elemento decorativo de sobre arriba
         const flap = document.createElement('div');
         flap.classList.add('envelope-header');
         modalMedia.appendChild(flap);
@@ -730,39 +724,21 @@ document.addEventListener('DOMContentLoaded', () => {
     if (modalClose) modalClose.addEventListener('click', () => modal.classList.remove('active'));
     if (modal) modal.addEventListener('click', (e) => { if (e.target === modal) modal.classList.remove('active'); });
 
-    renderFilterBar();
-    renderGrid();
-
-
-    // --- LÓGICA DE NAVEGACIÓN TIPO SLIDE PARA LAS CARTAS ---
-    let currentOpenDayNum = 1;
-
-    // Actualizamos openModal para guardar el día actual
-    const originalOpenModal = openModal;
-    openModal = function(item) {
-        currentOpenDayNum = item.day;
-        originalOpenModal(item);
-        updateSlideButtonsState();
-    };
-
+    // --- LÓGICA DE NAVEGACIÓN TIPO SLIDE ---
     function navigateSlide(direction) {
         const activeDaysData = getDaysData();
-        // Buscamos el índice actual en la lista de días
         const currentIndex = activeDaysData.findIndex(d => d.day === currentOpenDayNum);
         
         if (currentIndex === -1) return;
         
         const nextIndex = currentIndex + direction;
         
-        // Validar que exista el día anterior o siguiente en la lista
         if (nextIndex >= 0 && nextIndex < activeDaysData.length) {
             const nextItem = activeDaysData[nextIndex];
             
-            // Verificamos si el día está desbloqueado antes de dejarlo pasar
             const peruNow = getPeruDate();
             const todayPeru = peruNow.toISOString().split('T')[0];
             const isDayZero = (nextItem.day === 0);
-            const isGrandGift = (nextItem.day === 55);
             const isUnlocked = isDayZero || devMode || (todayPeru >= nextItem.date);
 
             if (isUnlocked) {
@@ -784,7 +760,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (nextBtn) nextBtn.disabled = (currentIndex >= activeDaysData.length - 1 || currentIndex === -1);
     }
 
-    // Eventos para las flechitas del modal
     const prevBtn = document.getElementById('modal-prev-btn');
     const nextBtn = document.getElementById('modal-next-btn');
 
@@ -795,7 +770,6 @@ document.addEventListener('DOMContentLoaded', () => {
         nextBtn.addEventListener('click', () => navigateSlide(1));
     }
 
-    // Control por teclado (Flecha izquierda y flecha derecha)
     document.addEventListener('keydown', (e) => {
         const modal = document.getElementById('modal');
         if (modal && modal.classList.contains('active')) {
@@ -803,4 +777,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (e.key === 'ArrowRight') navigateSlide(1);
         }
     });
+
+    renderFilterBar();
+    renderGrid();
 });
