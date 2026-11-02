@@ -442,7 +442,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!isUnlocked) {
                 card.classList.add('locked');
                 const unlockDate = new Date(`${item.date}T00:00:00-05:00`);
-                const diff = unlockDate.getTime() - peruNow.getTime();
+                const diff = unlockDate.getTime() - peruNowObj.getTime();
 
                 if (diff > 0) {
                     const days = Math.floor(diff / (1000 * 60 * 60 * 24));
