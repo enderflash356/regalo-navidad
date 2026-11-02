@@ -497,9 +497,9 @@ const adventDaysData = [
     {
         "day": 55,
         "date": "2026-12-25",
-        "title": "Dia 55: ",
+        "title": "Dia 55: Una canción para el amor de mi vida",
         "content": "",
-        "type": "text",
+        "type": "video",
         "textColor": "#e2e8f0",
         "mediaUrl": ""
     }
