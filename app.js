@@ -583,7 +583,24 @@ document.addEventListener('DOMContentLoaded', () => {
                     mediaUrl: newMediaUrl !== null ? newMediaUrl : (currentItem.mediaUrl || "")
                 };
 
-                localStorage.setItem('gf_advent_custom', JSON.stringify(savedCustomData));
+                // Guardado seguro para evitar el error de almacenamiento lleno
+                try {
+                    localStorage.setItem('gf_advent_custom', JSON.stringify(savedCustomData));
+                } catch (storageError) {
+                    console.warn("localStorage lleno, omitiendo guardado local pesado:", storageError);
+                    // Guardamos una versión ligera sin la URL gigante en el navegador, GitHub se encargará de la buena
+                    const tempLightData = { ...savedCustomData };
+                    tempLightData[currentEditingDay] = { 
+                        ...tempLightData[currentEditingDay], 
+                        mediaUrl: newMediaUrl ? "[Archivo pesado en GitHub]" : (tempLightData[currentEditingDay].mediaUrl || "") 
+                    };
+                    try {
+                        localStorage.setItem('gf_advent_custom', JSON.stringify(tempLightData));
+                    } catch (e) {
+                        // Si de plano está saturado, limpiamos el caché viejo
+                        localStorage.removeItem('gf_advent_custom');
+                    }
+                }
 
                 const updatedArray = activeDaysData.map(item => {
                     const custom = savedCustomData[item.day] || {};
