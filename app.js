@@ -1,4 +1,3 @@
-// --- CONFIGURACIÓN DE CONEXIÓN A GITHUB ---
 const GITHUB_USER = "enderflash356";
 const GITHUB_REPO = "regalo-navidad";
 
@@ -402,14 +401,17 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!gridContainer) return;
         gridContainer.innerHTML = '';
         
-        // Obtenemos la fecha exacta en formato string local de Perú (YYYY-MM-DD)
+        // TRUCO: Obtenemos la fecha de Perú y le sumamos 1 día para que todo abra antes
+        const peruNowObj = getPeruDate();
+        peruNowObj.setDate(peruNowObj.getDate() + 1);
+
         const peruFormatter = new Intl.DateTimeFormat('en-CA', {
             timeZone: 'America/Lima',
             year: 'numeric',
             month: '2-digit',
             day: '2-digit'
         });
-        const todayPeru = peruFormatter.format(getPeruDate());
+        const todayPeru = peruFormatter.format(peruNowObj);
 
         const activeDaysData = getDaysData();
         let unlockedCount = 0;
