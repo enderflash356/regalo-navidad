@@ -48,7 +48,7 @@ const adventDaysData = [
         "day": 5,
         "date": "2026-11-05",
         "title": "Dia 5: Cosas que admiro de ti y puede que no te haya dicho",
-        "content": "",
+        "content": "Hola xd",
         "type": "audio",
         "textColor": "#e2e8f0",
         "mediaUrl": ""
