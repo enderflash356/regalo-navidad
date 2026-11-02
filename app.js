@@ -696,7 +696,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
 
                     // Enviamos directamente a GitHub con la URL completa
-                    pushToGitHubDirect(base64Content);
+                    pushToGitHub(base64Content);
                 };
                 reader.readAsDataURL(file);
             } else {
