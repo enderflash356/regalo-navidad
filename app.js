@@ -672,12 +672,21 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             if (file) {
-                // Si hay un archivo multimedia, lo subimos directo sin saturar el localStorage
+                // Verificamos opcionalmente si pesa más de 50MB para avisar
+                if (file.size > 50 * 1024 * 1024) {
+                    alert("¡El archivo es muy pesado! Trata de que pese menos de 50MB para que suba fluido a GitHub.");
+                }
+
                 const reader = new FileReader();
+                
+                // Mostramos estado de carga inicial en el botón
+                editorSave.textContent = "Leyendo archivo pesado... 📂";
+                editorSave.disabled = true;
+
                 reader.onload = function(uploadEvent) {
                     const base64Content = uploadEvent.target.result;
                     
-                    // Guardamos solo los textos en el localStorage de forma segura
+                    // Guardamos solo los textos en el localStorage de forma ligera
                     savedCustomData[currentEditingDay] = {
                         title: editTitle ? editTitle.value : '',
                         content: editContent ? editContent.value : '',
@@ -687,17 +696,25 @@ document.addEventListener('DOMContentLoaded', () => {
                     };
                     
                     try {
-                        // Intentamos guardar una versión ligera o limpiar caché viejo
+                        // Limpiamos el localStorage de datos pesados previos para liberar espacio
                         const lightStorage = { ...savedCustomData };
-                        lightStorage[currentEditingDay].mediaUrl = "[Archivo en GitHub]";
+                        lightStorage[currentEditingDay].mediaUrl = "[Archivo multimedia en GitHub]";
                         localStorage.setItem('gf_advent_custom', JSON.stringify(lightStorage));
                     } catch (e) {
                         localStorage.removeItem('gf_advent_custom');
                     }
 
-                    // Enviamos directamente a GitHub con la URL completa
+                    // Enviamos el contenido completo directamente a la API de GitHub
                     pushToGitHub(base64Content);
                 };
+
+                reader.onerror = function() {
+                    alert("Hubo un error al leer el archivo desde tu equipo.");
+                    editorSave.textContent = "Guardar Cambios ✨";
+                    editorSave.disabled = false;
+                };
+
+                // Leemos el archivo como una URL de datos (Base64)
                 reader.readAsDataURL(file);
             } else {
                 pushToGitHub(null);
