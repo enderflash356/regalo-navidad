@@ -746,15 +746,27 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         if (modalMedia) modalMedia.innerHTML = '';
 
+        // --- EXCEPCIÓN ESPECIAL PARA EL DÍA 11 (EL SIMULADOR 3D) ---
+        if (item.day === 11) {
+            modalMedia.innerHTML = `
+                <div style="width: 100%; height: 420px; border-radius: 16px; overflow: hidden; box-shadow: 0 8px 25px rgba(0,0,0,0.6); margin-top: 10px;">
+                    <iframe src="cielo-3d.html" style="width: 100%; height: 100%; border: none;"></iframe>
+                </div>
+            `;
+            if (modal) modal.classList.add('active');
+            return; // Detenemos aquí para que no cargue imágenes o audios por defecto
+        }
+
         if (devMode) {
             const editBtnBtn = document.createElement('button');
             editBtnBtn.textContent = '✏️ Editar este Día';
-            editBtnBtn.style.cssText = 'background:#22c55e; color:white; border:none; padding:6px 14px; border-radius:12px; font-weight:bold; cursor:pointer; margin-bottom:12px; font-size:0.85rem;';
-            editBtnBtn.onclick = () => {
+            editBtnBtn.style.cssText = 'background:#22c55e; color:white; border:none; padding:8px 16px; border-radius:12px; font-weight:bold; cursor:pointer; margin-bottom:12px; font-size:0.85rem; position: relative; z-index: 99;';
+            editBtnBtn.onclick = (e) => {
+                e.stopPropagation(); // Evita que el clic se propague al modal de fondo
                 if (modal) modal.classList.remove('active');
                 openEditor(item);
             };
-            modalMedia.appendChild(editBtnBtn);
+            modalMedia.prepend(editBtnBtn); 
         }
 
         const flap = document.createElement('div');
