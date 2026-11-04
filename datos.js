@@ -83,9 +83,9 @@ const adventDaysData = [
     {
         "day": 9,
         "date": "2026-11-09",
-        "title": "Dia 9: ",
-        "content": "",
-        "type": "text",
+        "title": "Dia 9: Corazón de minecraft",
+        "content": "Pues... te amo mucho mucho mucho que decidí hacerte un corazón de fuegos artificiales en minecraft. Recuerdas que antes te dije que te iba a dar cuetes? Pues hoy te los doy en forma de corazón bleh",
+        "type": "video",
         "textColor": "#e2e8f0",
         "mediaUrl": ""
     },
