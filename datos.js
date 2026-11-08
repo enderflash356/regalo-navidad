@@ -101,11 +101,11 @@ const adventDaysData = [
     {
         "day": 11,
         "date": "2026-11-11",
-        "title": "Dia 11: ",
-        "content": "",
-        "type": "text",
-        "textColor": "#e2e8f0",
-        "mediaUrl": ""
+        "title": "Dia 11: Una playlist para mi niña",
+        "content": "Te hice esta playlist con varias canciones que me recuerdan a ti bleh, espero te guste",
+        "type": "embed",
+        "textColor": "#1db954",
+        "mediaUrl": '<iframe style="border-radius:12px" src="https://open.spotify.com/embed/playlist/2gm8BMD2EpKVGH5xhIWpMP?utm_source=generator&si=9a9e7a12b27e4256" width="100%" height="352" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>'
     },
     {
         "day": 12,

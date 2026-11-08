@@ -3,62 +3,62 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>El Cielo Que Lo Vio Todo - Touch Joystick</title>
+    <title>El Cielo Que Lo Vio Todo - GOTY Edition</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
-        body, html { width: 100%; height: 100%; overflow: hidden; background: #020617; font-family: 'Inter', sans-serif; color: #f8fafc; }
+        body, html { width: 100%; height: 100%; overflow: hidden; background: #050814; font-family: 'Inter', sans-serif; color: #f8fafc; }
 
         #canvas-container { width: 100%; height: 100%; position: absolute; top: 0; left: 0; cursor: grab; }
         #canvas-container:active { cursor: grabbing; }
 
-        /* AVISO DE ROTACIÓN MÓVIL */
+        /* AVISO ROTACIÓN MÓVIL */
         #rotate-warning {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: #020617; z-index: 999; display: none;
+            background: #050814; z-index: 999; display: none;
             flex-direction: column; justify-content: center; align-items: center;
             text-align: center; padding: 30px;
         }
         #rotate-warning h2 { color: #f43f5e; margin-bottom: 15px; font-size: 1.4rem; }
         #rotate-warning p { color: #cbd5e1; font-size: 0.95rem; line-height: 1.5; max-width: 320px; }
         .rotate-icon { font-size: 3.5rem; margin-bottom: 15px; animation: rotatePhone 2s infinite ease-in-out; }
-        @keyframes rotatePhone {
-            0% { transform: rotate(0deg); }
-            50% { transform: rotate(90deg); }
-            100% { transform: rotate(0deg); }
-        }
+        @keyframes rotatePhone { 0% { transform: rotate(0deg); } 50% { transform: rotate(90deg); } 100% { transform: rotate(0deg); } }
+        @media screen and (max-width: 900px) and (orientation: portrait) { #rotate-warning { display: flex; } }
 
-        @media screen and (max-width: 900px) and (orientation: portrait) {
-            #rotate-warning { display: flex; }
-        }
-
-        /* JOYSTICK TÁCTIL VIRTUAL PARA MÓVIL */
+        /* JOYSTICK TÁCTIL */
         #joystick-zone {
-            position: absolute; bottom: 25px; left: 25px; width: 110px; height: 110px;
-            background: rgba(255, 255, 255, 0.08); border: 2px solid rgba(244, 63, 94, 0.4);
-            border-radius: 50%; z-index: 15; backdrop-filter: blur(4px); touch-action: none;
+            position: absolute; bottom: 25px; left: 25px; width: 100px; height: 100px;
+            background: rgba(255, 255, 255, 0.05); border: 2px solid rgba(244, 63, 94, 0.3);
+            border-radius: 50%; z-index: 15; backdrop-filter: blur(6px); touch-action: none;
             display: flex; justify-content: center; align-items: center;
         }
         #joystick-knob {
-            width: 45px; height: 45px; background: rgba(244, 63, 94, 0.7);
-            border-radius: 50%; box-shadow: 0 0 15px rgba(244, 63, 94, 0.6);
+            width: 40px; height: 40px; background: rgba(244, 63, 94, 0.8);
+            border-radius: 50%; box-shadow: 0 0 12px rgba(244, 63, 94, 0.6);
             position: absolute; pointer-events: none; transition: transform 0.05s ease-out;
         }
+        @media (pointer: fine) { #joystick-zone { display: none; } }
 
-        /* Ocultar Joystick en PC si no hay soporte táctil */
-        @media (pointer: fine) {
-            #joystick-zone { display: none; }
+        /* BOTÓN INTERACCIÓN / PUERTA */
+        #interact-btn {
+            position: absolute; bottom: 30px; right: 30px; width: 68px; height: 68px;
+            background: linear-gradient(135deg, #f43f5e, #ec4899); border: 2px solid #fff;
+            border-radius: 50%; color: white; font-size: 1.4rem; font-weight: bold;
+            display: none; justify-content: center; align-items: center; z-index: 15;
+            box-shadow: 0 0 20px rgba(244, 63, 94, 0.7); cursor: pointer;
         }
+        #interact-btn.active { display: flex; animation: pulseBtn 1s infinite alternate; }
+        @keyframes pulseBtn { 0% { transform: scale(1); } 100% { transform: scale(1.1); } }
 
-        /* Intro Undertale */
+        /* INTRO */
         #intro-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: #000; z-index: 100; display: flex; flex-direction: column;
             justify-content: center; align-items: center; padding: 20px; text-align: center;
         }
         .dialogue-box {
-            border: 4px solid #fff; background: #000; padding: 20px; border-radius: 12px;
+            border: 3px solid #fff; background: #000; padding: 22px; border-radius: 12px;
             max-width: 550px; width: 100%; min-height: 130px; display: flex; align-items: center;
-            box-shadow: 0 0 25px rgba(255,255,255,0.2);
+            box-shadow: 0 0 25px rgba(255,255,255,0.15);
         }
         #dialogue-text { font-size: 1rem; line-height: 1.5; color: #fff; text-align: left; font-family: monospace; }
         .skip-intro {
@@ -66,7 +66,7 @@
             color: #cbd5e1; padding: 6px 14px; border-radius: 8px; cursor: pointer; font-size: 0.85rem;
         }
 
-        /* UI Superior */
+        /* UI SUPERIOR */
         #ui-overlay {
             position: absolute; top: 15px; left: 0; width: 100%; display: flex;
             justify-content: space-between; align-items: center; padding: 0 20px; z-index: 10; pointer-events: none;
@@ -75,59 +75,60 @@
         
         .location-switch, .music-toggle {
             background: rgba(15, 23, 42, 0.85); border: 1px solid rgba(244, 63, 94, 0.4);
-            padding: 8px 14px; border-radius: 30px; color: white; font-weight: bold; cursor: pointer;
-            backdrop-filter: blur(8px); box-shadow: 0 4px 20px rgba(0,0,0,0.5); font-size: 0.8rem;
+            padding: 7px 14px; border-radius: 30px; color: white; font-weight: bold; cursor: pointer;
+            backdrop-filter: blur(8px); font-size: 0.8rem; box-shadow: 0 4px 15px rgba(0,0,0,0.4);
         }
         .info-pill {
             background: rgba(15, 23, 42, 0.85); border: 1px solid rgba(255, 255, 255, 0.15);
-            padding: 8px 14px; border-radius: 30px; font-size: 0.75rem; backdrop-filter: blur(8px); color: #cbd5e1;
+            padding: 7px 14px; border-radius: 30px; font-size: 0.75rem; backdrop-filter: blur(8px); color: #cbd5e1;
         }
 
         #minigame-score {
             position: absolute; top: 60px; left: 20px; background: rgba(15, 23, 42, 0.85);
             border: 1px solid #fbbf24; padding: 5px 12px; border-radius: 20px; font-size: 0.75rem;
-            color: #fbbf24; backdrop-filter: blur(8px); z-index: 10;
+            color: #fbbf24; backdrop-filter: blur(8px); z-index: 10; font-weight: bold;
         }
 
-        /* Modal de Secretos */
+        /* INSTRUCCIONES INFERIOR */
+        #instructions-box {
+            position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%);
+            background: rgba(15, 23, 42, 0.85); border: 1px solid rgba(255, 255, 255, 0.15);
+            padding: 6px 16px; border-radius: 15px; backdrop-filter: blur(6px);
+            z-index: 10; text-align: center; max-width: 90%; width: 520px;
+        }
+        #instructions-box p { color: #cbd5e1; font-size: 0.73rem; }
+        #instructions-box span { color: #f43f5e; font-weight: bold; }
+
+        /* MODAL */
         #star-modal {
-            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(100px);
-            background: rgba(15, 23, 42, 0.95); border: 2px solid #f43f5e; padding: 18px 25px;
+            position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%) translateY(120px);
+            background: rgba(15, 23, 42, 0.95); border: 2px solid #f43f5e; padding: 20px 25px;
             border-radius: 20px; max-width: 400px; width: 90%; text-align: center; z-index: 20;
             box-shadow: 0 10px 30px rgba(244, 63, 94, 0.4); backdrop-filter: blur(12px);
             transition: all 0.3s ease; opacity: 0; pointer-events: none;
         }
         #star-modal.active { transform: translateX(-50%) translateY(0); opacity: 1; pointer-events: auto; }
-        #star-modal h3 { color: #f43f5e; margin-bottom: 6px; font-size: 1.1rem; }
+        #star-modal h3 { color: #f43f5e; margin-bottom: 8px; font-size: 1.1rem; }
         #star-modal p { color: #f1f5f9; font-size: 0.85rem; line-height: 1.4; }
         #star-modal button {
-            margin-top: 12px; background: #f43f5e; border: none; color: white; padding: 6px 14px;
+            margin-top: 12px; background: #f43f5e; border: none; color: white; padding: 6px 16px;
             border-radius: 10px; cursor: pointer; font-weight: bold;
-        }
-
-        .instructions {
-            position: absolute; bottom: 10px; width: 100%; text-align: center;
-            color: rgba(255,255,255,0.7); font-size: 0.75rem; pointer-events: none;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.9); font-weight: 500;
         }
     </style>
 </head>
 <body>
 
-    <!-- AVISO ROTACIÓN -->
     <div id="rotate-warning">
         <div class="rotate-icon">📱</div>
-        <h2>¡Voltea tu teléfono, mi niña! 💖</h2>
-        <p>Para disfrutar este observatorio 3D y ver las estrellas con el joystick táctil, pon tu celular en horizontal.</p>
+        <h2>¡Voltea tu teléfono! 💖</h2>
+        <p>Para explorar este observatorio 3D, gira tu celular en horizontal.</p>
     </div>
 
-    <!-- INTRO UNDERTALE -->
     <div id="intro-overlay">
         <div class="dialogue-box"><div id="dialogue-text"></div></div>
         <button class="skip-intro interactive-elem" onclick="skipIntro()">Saltar intro ⏭️</button>
     </div>
 
-    <!-- UI SUPERIOR -->
     <div id="ui-overlay">
         <div class="info-pill interactive-elem">📅 11 Oct 2026 • 18:32</div>
         <div style="display: flex; gap: 6px;">
@@ -136,20 +137,20 @@
         </div>
     </div>
 
-    <div id="minigame-score">🌠 Estrellas: <span id="score-val">0</span> / 3</div>
+    <div id="minigame-score">🎒 Recuerdos: <span id="score-val">0</span> / 4</div>
     
-    <!-- JOYSTICK VIRTUAL -->
-    <div id="joystick-zone">
-        <div id="joystick-knob"></div>
-    </div>
+    <div id="joystick-zone"><div id="joystick-knob"></div></div>
+    <div id="interact-btn">🚪</div>
 
     <div id="canvas-container"></div>
-    <div class="instructions">🎮 Palanca / WASD para caminar • Desliza en pantalla para mirar ✨</div>
 
-    <!-- MODAL DE TEXTO -->
+    <div id="instructions-box">
+        <p>🎮 <span>Moverse:</span> WASD / Palanca &nbsp;|&nbsp; <span>Puerta/Recoger:</span> [E] o Botón &nbsp;|&nbsp; <span>Mirar:</span> Arrastra pantalla</p>
+    </div>
+
     <div id="star-modal">
-        <h3 id="modal-star-title">✨ Astromensaje</h3>
-        <p id="modal-star-desc">Contenido secreto...</p>
+        <h3 id="modal-star-title">✨ Recuerdo</h3>
+        <p id="modal-star-desc">...</p>
         <button onclick="closeStarModal()">Cerrar 💖</button>
     </div>
 
@@ -157,27 +158,26 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 
     <script>
-        // --- 1. INTRO UNDERTALE ---
+        // --- 1. INTRO ---
         const introLines = [
-            "11 de octubre...", "A las 18:32 horas...",
-            "Dos almas que durante meses se sentían atraídas...", "pero nunca lo confesaron...",
-            "Finalmente decidieron dejar sus miedos atrás...", "y confesarse todo...",
-            "Dando inicio a una bonita relación...", "Y este... fue el cielo que lo vio todo..."
+            "11 de octubre de 2026...", "A las 18:32 horas...",
+            "Bajo el cielo de Huacho y Guatemala...",
+            "La luna creciente y Venus fueron testigos de todo...",
+            "Explora el bosque, entra a la cabaña y descubre los recuerdos..."
         ];
         let lineIndex = 0, charIndex = 0, isTyping = true, audioCtx = null;
         const dialogueTextEl = document.getElementById('dialogue-text');
 
-        function playBlip() {
+        function playSound(freq, duration = 0.08) {
             try {
                 if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
                 const osc = audioCtx.createOscillator();
                 const gain = audioCtx.createGain();
-                osc.type = 'triangle';
-                osc.frequency.setValueAtTime(320 + Math.random() * 120, audioCtx.currentTime);
+                osc.type = 'triangle'; osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
                 gain.gain.setValueAtTime(0.02, audioCtx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.07);
+                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
                 osc.connect(gain); gain.connect(audioCtx.destination);
-                osc.start(); osc.stop(audioCtx.currentTime + 0.07);
+                osc.start(); osc.stop(audioCtx.currentTime + duration);
             } catch(e) {}
         }
 
@@ -187,7 +187,7 @@
                 const line = introLines[lineIndex];
                 if (charIndex < line.length) {
                     dialogueTextEl.textContent += line.charAt(charIndex);
-                    if (line.charAt(charIndex) !== ' ') playBlip();
+                    if (line.charAt(charIndex) !== ' ') playSound(320 + Math.random() * 100);
                     charIndex++; setTimeout(typeWriter, 40);
                 } else {
                     setTimeout(() => { charIndex = 0; lineIndex++; dialogueTextEl.textContent = ""; typeWriter(); }, 1300);
@@ -214,95 +214,82 @@
             }
         }
 
-        // --- 2. TEXTURAS Y CÁMARA 3D ---
-        function createCircleTexture(colorStr, glowColor) {
-            const canvas = document.createElement('canvas');
-            canvas.width = 128; canvas.height = 128;
-            const ctx = canvas.getContext('2d');
-            const grad = ctx.createRadialGradient(64,64,0, 64,64,64);
-            grad.addColorStop(0, colorStr);
-            grad.addColorStop(0.3, glowColor);
-            grad.addColorStop(1, 'rgba(0,0,0,0)');
-            ctx.fillStyle = grad; ctx.fillRect(0, 0, 128, 128);
-            return new THREE.CanvasTexture(canvas);
-        }
-
-        const starTexture = createCircleTexture('#ffffff', 'rgba(147, 197, 253, 0.8)');
-        const fireflyTexture = createCircleTexture('#fde047', 'rgba(251, 191, 36, 0.6)');
-
+        // --- 2. ESCENA 3D ---
         const container = document.getElementById('canvas-container');
         const scene = new THREE.Scene();
-        scene.fog = new THREE.FogExp2(0x020617, 0.007);
+        scene.fog = new THREE.FogExp2(0x050814, 0.0045);
 
         const camera = new THREE.PerspectiveCamera(65, window.innerWidth / window.innerHeight, 0.1, 1000);
-        camera.position.set(0, 1.7, 0);
+        camera.position.set(0, 1.7, 5);
 
         const renderer = new THREE.WebGLRenderer({ antialias: true });
         renderer.setSize(window.innerWidth, window.innerHeight);
         renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
         container.appendChild(renderer.domElement);
 
-        // --- 3. CONTROLES COMBINADOS (WASD + JOYSTICK MÓVIL) ---
+        // --- 3. COLISIONES Y MOVIMIENTO ---
         const moveState = { forward: 0, right: 0 };
         const walkSpeed = 0.12;
+        let insideCabin = false;
 
-        // Teclado (PC)
+        function checkCollision(newX, newZ) {
+            // Si está dentro de la cabaña, limitar al perímetro interior
+            if (insideCabin) {
+                if (newX < -3.3 || newX > 3.3 || newZ < -18.8 || newZ > -11.2) {
+                    // Permitir salir por la puerta (en z = -11.2 y x cerca de 0)
+                    if (Math.abs(newX) < 1.2 && newZ >= -11.5 && newZ <= -10.8) return false;
+                    return true; // Bloqueado por paredes
+                }
+                return false;
+            }
+            // Colisión con paredes exteriores de la cabaña (x: -3.5 a 3.5, z: -19 a -11)
+            if (newX > -3.7 && newX < 3.7 && newZ > -19.2 && newZ < -10.8) {
+                // Permitir entrar si está en la puerta (x entre -1 y 1, z cerca de -11)
+                if (Math.abs(newX) < 1.2 && newZ >= -11.5 && newZ <= -10.5) return false;
+                return true;
+            }
+            return false;
+        }
+
         window.addEventListener('keydown', (e) => {
             if (['w','W','ArrowUp'].includes(e.key)) moveState.forward = 1;
             if (['s','S','ArrowDown'].includes(e.key)) moveState.forward = -1;
             if (['d','D','ArrowRight'].includes(e.key)) moveState.right = 1;
             if (['a','A','ArrowLeft'].includes(e.key)) moveState.right = -1;
+            if (e.key === 'e' || e.key === 'E') triggerInteraction();
         });
         window.addEventListener('keyup', (e) => {
             if (['w','W','s','S','ArrowUp','ArrowDown'].includes(e.key)) moveState.forward = 0;
             if (['a','A','d','D','ArrowLeft','ArrowRight'].includes(e.key)) moveState.right = 0;
         });
 
-        // Joystick Táctil (Móvil)
         const joystickZone = document.getElementById('joystick-zone');
         const joystickKnob = document.getElementById('joystick-knob');
         let joyActive = false, joyStartPos = { x: 0, y: 0 };
 
         joystickZone.addEventListener('touchstart', (e) => {
             e.stopPropagation(); joyActive = true;
-            const touch = e.touches[0];
             const rect = joystickZone.getBoundingClientRect();
             joyStartPos = { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 };
         });
-
         window.addEventListener('touchmove', (e) => {
             if (!joyActive) return;
             const touch = Array.from(e.touches).find(t => t.target === joystickZone || joystickZone.contains(t.target)) || e.touches[0];
-            const deltaX = touch.clientX - joyStartPos.x;
-            const deltaY = touch.clientY - joyStartPos.y;
-            const dist = Math.min(Math.hypot(deltaX, deltaY), 40);
-            const angle = Math.atan2(deltaY, deltaX);
-
-            const knobX = Math.cos(angle) * dist;
-            const knobY = Math.sin(angle) * dist;
-            joystickKnob.style.transform = `translate(${knobX}px, ${knobY}px)`;
-
-            moveState.right = knobX / 40;
-            moveState.forward = -knobY / 40;
+            const deltaX = touch.clientX - joyStartPos.x, deltaY = touch.clientY - joyStartPos.y;
+            const dist = Math.min(Math.hypot(deltaX, deltaY), 35), angle = Math.atan2(deltaY, deltaX);
+            joystickKnob.style.transform = `translate(${Math.cos(angle) * dist}px, ${Math.sin(angle) * dist}px)`;
+            moveState.right = (Math.cos(angle) * dist) / 35; moveState.forward = -(Math.sin(angle) * dist) / 35;
         });
-
         window.addEventListener('touchend', () => {
-            if (joyActive) {
-                joyActive = false;
-                joystickKnob.style.transform = `translate(0px, 0px)`;
-                moveState.forward = 0; moveState.right = 0;
-            }
+            if (joyActive) { joyActive = false; joystickKnob.style.transform = `translate(0px, 0px)`; moveState.forward = 0; moveState.right = 0; }
         });
 
-        // Girar Vista con Arrastre
         let isDragging = false, prevMouse = { x: 0, y: 0 }, lon = 0, lat = 10;
         container.addEventListener('mousedown', (e) => { isDragging = true; prevMouse = { x: e.clientX, y: e.clientY }; });
         window.addEventListener('mousemove', (e) => {
             if (!isDragging) return;
-            lon -= (e.clientX - prevMouse.x) * 0.22;
-            lat += (e.clientY - prevMouse.y) * 0.22;
-            lat = Math.max(-30, Math.min(75, lat));
-            prevMouse = { x: e.clientX, y: e.clientY };
+            lon -= (e.clientX - prevMouse.x) * 0.22; lat += (e.clientY - prevMouse.y) * 0.22;
+            lat = Math.max(-30, Math.min(75, lat)); prevMouse = { x: e.clientX, y: e.clientY };
         });
         window.addEventListener('mouseup', () => isDragging = false);
 
@@ -311,89 +298,167 @@
         });
         window.addEventListener('touchmove', (e) => {
             if (!isDragging || joyActive || e.touches.length !== 1) return;
-            lon -= (e.touches[0].clientX - prevMouse.x) * 0.22;
-            lat += (e.touches[0].clientY - prevMouse.y) * 0.22;
-            lat = Math.max(-30, Math.min(75, lat));
-            prevMouse = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+            lon -= (e.touches[0].clientX - prevMouse.x) * 0.22; lat += (e.touches[0].clientY - prevMouse.y) * 0.22;
+            lat = Math.max(-30, Math.min(75, lat)); prevMouse = { x: e.touches[0].clientX, y: e.touches[0].clientY };
         });
         window.addEventListener('touchend', () => isDragging = false);
 
 
-        // --- 4. ENTORNO Y ÁRBOLES 3D ---
-        const ground = new THREE.Mesh(new THREE.PlaneGeometry(400, 400), new THREE.MeshBasicMaterial({ color: 0x040f07 }));
+        // --- 4. ENTORNO Y CABAÑA FUNCIONAL ---
+        const ground = new THREE.Mesh(new THREE.PlaneGeometry(400, 400), new THREE.MeshBasicMaterial({ color: 0x03080f }));
         ground.rotation.x = -Math.PI / 2; scene.add(ground);
 
-        const treesGroup = new THREE.Group();
-        const treeGeo = new THREE.ConeGeometry(3, 12, 6);
-        const trunkGeo = new THREE.CylinderGeometry(0.5, 0.5, 3, 6);
-        const treeMat = new THREE.MeshBasicMaterial({ color: 0x022c14 });
-        const trunkMat = new THREE.MeshBasicMaterial({ color: 0x0f172a });
+        // Cabaña detallada con interior
+        const cabinGroup = new THREE.Group();
+        const wallsMat = new THREE.MeshBasicMaterial({ color: 0x2d1810 });
+        const roofMat = new THREE.MeshBasicMaterial({ color: 0x4a1d1d });
 
-        for(let i=0; i<45; i++) {
+        // Paredes exteriores
+        const wallFront = new THREE.Mesh(new THREE.BoxGeometry(8, 4, 0.4), wallsMat); wallFront.position.set(0, 2, 4);
+        const wallBack = new THREE.Mesh(new THREE.BoxGeometry(8, 4, 0.4), wallsMat); wallBack.position.set(0, 2, -4);
+        const wallLeft = new THREE.Mesh(new THREE.BoxGeometry(0.4, 4, 8.4), wallsMat); wallLeft.position.set(-4, 2, 0);
+        const wallRight = new THREE.Mesh(new THREE.BoxGeometry(0.4, 4, 8.4), wallsMat); wallRight.position.set(4, 2, 0);
+        
+        // Techo a dos aguas
+        const roof = new THREE.Mesh(new THREE.ConeGeometry(6, 3, 4), roofMat);
+        roof.position.y = 5.5; roof.rotation.y = Math.PI / 4;
+
+        // Interior: Chimenea y alfombra
+        const rug = new THREE.Mesh(new THREE.PlaneGeometry(2.5, 3), new THREE.MeshBasicMaterial({ color: 0x7f1d1d }));
+        rug.rotation.x = -Math.PI / 2; rug.position.set(0, 0.01, 0);
+
+        cabinGroup.add(wallFront); cabinGroup.add(wallBack); cabinGroup.add(wallLeft); cabinGroup.add(wallRight);
+        cabinGroup.add(roof); cabinGroup.add(rug);
+        cabinGroup.position.set(0, 0, -15);
+        scene.add(cabinGroup);
+
+        // Pinos detallados en el bosque
+        const treesGroup = new THREE.Group();
+        for(let i=0; i<40; i++) {
             const tree = new THREE.Group();
-            const foliage = new THREE.Mesh(treeGeo, treeMat); foliage.position.y = 6;
-            const trunk = new THREE.Mesh(trunkGeo, trunkMat); trunk.position.y = 1.5;
+            const foliage = new THREE.Mesh(new THREE.ConeGeometry(3, 12, 6), new THREE.MeshBasicMaterial({ color: 0x062314 }));
+            foliage.position.y = 6;
+            const trunk = new THREE.Mesh(new THREE.CylinderGeometry(0.5, 0.5, 3, 6), new THREE.MeshBasicMaterial({ color: 0x1e1b18 }));
+            trunk.position.y = 1.5;
             tree.add(foliage); tree.add(trunk);
-            const angle = Math.random() * Math.PI * 2;
-            const radius = 25 + Math.random() * 80;
+            const angle = Math.random() * Math.PI * 2, radius = 22 + Math.random() * 80;
             tree.position.set(Math.cos(angle) * radius, 0, Math.sin(angle) * radius);
             treesGroup.add(tree);
         }
         scene.add(treesGroup);
 
-        // Luciérnagas y Estrellas
-        const ffGeo = new THREE.BufferGeometry(); const ffPos = new Float32Array(90 * 3);
-        for(let i=0; i<270; i+=3) { ffPos[i] = (Math.random() - 0.5) * 140; ffPos[i+1] = Math.random() * 3 + 0.5; ffPos[i+2] = (Math.random() - 0.5) * 140; }
+        // Luciérnagas
+        const ffGeo = new THREE.BufferGeometry(); const ffPos = new Float32Array(120 * 3);
+        for(let i=0; i<360; i+=3) { ffPos[i] = (Math.random() - 0.5) * 140; ffPos[i+1] = Math.random() * 3 + 0.5; ffPos[i+2] = (Math.random() - 0.5) * 140; }
         ffGeo.setAttribute('position', new THREE.BufferAttribute(ffPos, 3));
-        const fireflies = new THREE.Points(ffGeo, new THREE.PointsMaterial({ size: 2.5, map: fireflyTexture, transparent: true, opacity: 0.9, depthWrite: false, blending: THREE.AdditiveBlending }));
-        scene.add(fireflies);
+        scene.add(new THREE.Points(ffGeo, new THREE.PointsMaterial({ size: 2.5, color: 0xfbbf24, transparent: true, opacity: 0.85 })));
 
-        const starsGeo = new THREE.BufferGeometry(); const starsPos = new Float32Array(2200 * 3);
-        for(let i=0; i<6600; i+=3) { starsPos[i] = (Math.random() - 0.5) * 500; starsPos[i+1] = Math.random() * 250 + 20; starsPos[i+2] = (Math.random() - 0.5) * 500; }
+
+        // --- 5. ASTRONOMÍA VERÍDICA (11 OCT 2026 - 18:32) ---
+        const starsGeo = new THREE.BufferGeometry(); const starsPos = new Float32Array(3000 * 3);
+        for(let i=0; i<9000; i+=3) { starsPos[i] = (Math.random() - 0.5) * 500; starsPos[i+1] = Math.random() * 250 + 20; starsPos[i+2] = (Math.random() - 0.5) * 500; }
         starsGeo.setAttribute('position', new THREE.BufferAttribute(starsPos, 3));
-        const starField = new THREE.Points(starsGeo, new THREE.PointsMaterial({ size: 3.5, map: starTexture, transparent: true, opacity: 0.9, depthWrite: false, blending: THREE.AdditiveBlending }));
-        scene.add(starField);
+        scene.add(new THREE.Points(starsGeo, new THREE.PointsMaterial({ size: 1.8, color: 0xbae6fd, transparent: true, opacity: 0.8 })));
 
-
-        // --- 5. ASTROS INTERACTIVOS ---
-        const interactiveGroup = new THREE.Group(); scene.add(interactiveGroup);
-
-        const moonMesh = new THREE.Mesh(new THREE.SphereGeometry(4, 32, 32), new THREE.MeshBasicMaterial({ color: 0xfef08a }));
-        moonMesh.position.set(-40, 50, -110);
-        moonMesh.userData = { title: "🌙 La Luna en Huacho (2% creciente)", desc: "A las 18:32 del 11 de octubre de 2026, esta fina luna creciente iluminaba el cielo costero cuando todo comenzó." };
-        interactiveGroup.add(moonMesh);
+        // La Luna Creciente inicial + Venus en el oeste
+        const moonGroup = new THREE.Group();
+        const moonMesh = new THREE.Mesh(new THREE.SphereGeometry(5, 32, 32), new THREE.MeshBasicMaterial({ color: 0xfef08a }));
+        moonGroup.add(moonMesh);
+        moonGroup.position.set(-50, 25, -120); // Muy baja en el horizonte oeste a las 18:32
+        scene.add(moonGroup);
+        moonMesh.userData = { title: "🌙 Luna del 11 de Oct • 18:32", desc: "Fina luna creciente (0.4%-1% iluminación) poniéndose por el oeste tras el anochecer[cite: 1, 2, 3]." };
 
         const venusMesh = new THREE.Mesh(new THREE.SphereGeometry(1.6, 16, 16), new THREE.MeshBasicMaterial({ color: 0xffedd5 }));
-        venusMesh.position.set(-25, 28, -85);
-        venusMesh.userData = { title: "✨ Venus (Lucero de la Tarde)", desc: "Brillando con intensidad en el horizonte oeste, testigo del momento exacto en que decidimos decirnos la verdad." };
-        interactiveGroup.add(venusMesh);
-
-        const vegaMesh = new THREE.Mesh(new THREE.SphereGeometry(1.8, 16, 16), new THREE.MeshBasicMaterial({ color: 0x93c5fd }));
-        vegaMesh.position.set(50, 80, -95);
-        vegaMesh.userData = { title: "⭐ Estrella Vega", desc: "La reina del firmamento nocturno. Bajo sus destellos se unieron nuestras dos historias para siempre." };
-        interactiveGroup.add(vegaMesh);
+        venusMesh.position.set(-40, 28, -110); // En conjunción con la luna en el oeste
+        venusMesh.userData = { title: "✨ Planeta Venus", desc: "Brillando en conjunción aparente junto a la luna en el horizonte oeste (INSIVUMEH)[cite: 1]." };
+        
+        const interactiveGroup = new THREE.Group(); scene.add(interactiveGroup);
+        interactiveGroup.add(moonMesh); interactiveGroup.add(venusMesh);
 
 
-        // --- 6. MINIJUEGO: ESTRELLAS FUGACES ---
-        let collectedStars = 0;
-        function spawnShootingStar() {
-            const star = new THREE.Mesh(new THREE.SphereGeometry(1.5, 16, 16), new THREE.MeshBasicMaterial({ color: 0xfbbf24 }));
-            star.position.set(camera.position.x + (Math.random() - 0.5) * 60, Math.random() * 20 + 15, camera.position.z - (Math.random() * 40 + 20));
-            star.userData = { isCollectible: true, title: "🌠 ¡Estrella Atrapada!", desc: `¡Has atrapado una estrella fugaz! (${++collectedStars}/3). Mi único deseo siempre será seguir caminando a tu lado. 💖` };
-            scene.add(star); interactiveGroup.add(star);
-            setTimeout(() => { if(star.parent) { scene.remove(star); interactiveGroup.remove(star); } }, 7000);
+        // --- 6. 4 RECUERDOS (2 HUACHO, 2 GUATE / 1 DENTRO DE CABAÑA) ---
+        const objectsToFind = [
+            { pos: new THREE.Vector3(-12, 0, -10), title: "🇵🇪 Huacho: El Amanecer", desc: "El día comenzó con la costa peruana y la rutina universitaria.", activated: false },
+            { pos: new THREE.Vector3(14, 0, -12), title: "🇬🇹 Guatemala: Mixco", desc: "A las 18:32 el cielo de Mixco presenciaba la conjunción de Venus y la luna[cite: 1].", activated: false },
+            { pos: new THREE.Vector3(8, 0, -18), title: "💬 Discord (Junio 2026)", desc: "El servidor compartido donde empezó nuestra hermosa coincidencia.", activated: false },
+            { pos: new THREE.Vector3(0, 0, -15), title: "💖 La Confesión (Adentro de Cabaña)", desc: "Dejar los miedos atrás a las 18:32 y dar inicio a nuestra relación.", activated: false, inside: true }
+        ];
+
+        const objectsGroup = new THREE.Group();
+        objectsToFind.forEach((obj, idx) => {
+            const mesh = new THREE.Mesh(new THREE.OctahedronGeometry(0.8), new THREE.MeshBasicMaterial({ color: 0xf43f5e }));
+            mesh.position.copy(obj.pos); mesh.position.y = obj.inside ? 1.0 : 0.8;
+            mesh.userData = { objIdx: idx };
+            objectsGroup.add(mesh);
+            obj.mesh = mesh;
+        });
+        scene.add(objectsGroup);
+
+        let foundCount = 0;
+        const interactBtn = document.getElementById('interact-btn');
+
+        function checkProximity() {
+            let nearAny = false;
+            // Checar puerta de la cabaña (cerca de x:0, z:-11)
+            const distDoor = camera.position.distanceTo(new THREE.Vector3(0, 1.7, -11));
+            if (distDoor < 3.5) {
+                nearAny = true;
+                if(interactBtn) {
+                    interactBtn.textContent = insideCabin ? "🚪 Salir" : "🚪 Entrar";
+                    interactBtn.classList.add('active');
+                }
+            }
+
+            // Checar recuerdos
+            objectsToFind.forEach(obj => {
+                const dist = camera.position.distanceTo(obj.pos);
+                if (dist < 4 && !obj.activated) {
+                    nearAny = true;
+                    if(interactBtn) {
+                        interactBtn.textContent = "🎁";
+                        interactBtn.classList.add('active');
+                    }
+                }
+            });
+
+            if (!nearAny && interactBtn) interactBtn.classList.remove('active');
         }
-        setInterval(() => { if(collectedStars < 3 && Math.random() > 0.3) spawnShootingStar(); }, 5000);
+
+        function triggerInteraction() {
+            // Activar puerta si está cerca
+            const distDoor = camera.position.distanceTo(new THREE.Vector3(0, 1.7, -11));
+            if (distDoor < 3.5) {
+                insideCabin = !insideCabin;
+                camera.position.set(0, 1.7, insideCabin ? -13.5 : -9.5);
+                playSound(440, 0.15);
+                return;
+            }
+
+            // Recoger recuerdos
+            objectsToFind.forEach(obj => {
+                const dist = camera.position.distanceTo(obj.pos);
+                if (dist < 4 && !obj.activated) {
+                    obj.activated = true;
+                    foundCount++;
+                    obj.mesh.visible = false;
+                    document.getElementById('score-val').textContent = foundCount;
+                    playSound(523.25, 0.15);
+                    setTimeout(() => playSound(659.25, 0.2), 120);
+                    showStarModal(obj.title, obj.desc);
+                    if(interactBtn) interactBtn.classList.remove('active');
+                }
+            });
+        }
+
+        if(interactBtn) interactBtn.addEventListener('click', triggerInteraction);
 
         let currentLoc = 'huacho';
         function toggleLocation() {
             const btn = document.getElementById('loc-btn');
             if (currentLoc === 'huacho') {
                 currentLoc = 'guatemala'; btn.innerHTML = '🇬🇹 Guatemala';
-                moonMesh.position.set(-30, 46, -100); venusMesh.position.set(-18, 26, -80);
             } else {
                 currentLoc = 'huacho'; btn.innerHTML = '🇵🇪 Huacho';
-                moonMesh.position.set(-40, 50, -110); venusMesh.position.set(-25, 28, -85);
             }
         }
 
@@ -404,11 +469,7 @@
             const intersects = raycaster.intersectObjects(interactiveGroup.children);
             if (intersects.length > 0) {
                 const obj = intersects[0].object;
-                showStarModal(obj.userData.title, obj.userData.desc);
-                if (obj.userData.isCollectible) {
-                    document.getElementById('score-val').textContent = collectedStars;
-                    scene.remove(obj); interactiveGroup.remove(obj);
-                }
+                if(obj.userData && obj.userData.title) showStarModal(obj.userData.title, obj.userData.desc);
             }
         });
 
@@ -416,7 +477,7 @@
         function closeStarModal() { document.getElementById('star-modal').classList.remove('active'); }
 
 
-        // --- 7. ANIMACIÓN BUCLE Y MOVIMIENTO ---
+        // --- 7. ANIMACIÓN ---
         function animate() {
             requestAnimationFrame(animate);
 
@@ -426,8 +487,22 @@
             const forward = new THREE.Vector3(Math.sin(phi)*Math.sin(theta), 0, Math.sin(phi)*Math.cos(theta)).normalize();
             const side = new THREE.Vector3(Math.sin(theta - Math.PI/2), 0, Math.cos(theta - Math.PI/2)).normalize();
 
-            if (moveState.forward !== 0) camera.position.addScaledVector(forward, walkSpeed * moveState.forward);
-            if (moveState.right !== 0) camera.position.addScaledVector(side, walkSpeed * moveState.right);
+            let nextX = camera.position.x;
+            let nextZ = camera.position.z;
+
+            if (moveState.forward !== 0) {
+                nextX += forward.x * walkSpeed * moveState.forward;
+                nextZ += forward.z * walkSpeed * moveState.forward;
+            }
+            if (moveState.right !== 0) {
+                nextX += side.x * walkSpeed * moveState.right;
+                nextZ += side.z * walkSpeed * moveState.right;
+            }
+
+            if (!checkCollision(nextX, nextZ)) {
+                camera.position.x = nextX;
+                camera.position.z = nextZ;
+            }
 
             camera.position.y = 1.7;
 
@@ -438,7 +513,9 @@
             );
             camera.lookAt(targetLookAt);
 
-            fireflies.rotation.y += 0.001;
+            objectsToFind.forEach(obj => { if(obj.mesh && !obj.activated) obj.mesh.rotation.y += 0.03; });
+
+            checkProximity();
             renderer.render(scene, camera);
         }
         animate();
