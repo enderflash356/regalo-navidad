@@ -502,6 +502,21 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             card.addEventListener('click', () => {
+                if (item.day === 12) {
+                    // Fecha exacta de apertura: 11 de noviembre de 2026 a las 17:32:00 (Hora Perú UTC-5)
+                    const fechaApertura = new Date('2026-11-11T17:32:00-05:00').getTime();
+                    const ahoraPeru = getPeruDate().getTime(); // Usando la función que ya tiene tu app.js
+
+                    if (ahoraPeru < fechaApertura && !devMode) {
+                        const diferencia = fechaApertura - ahoraPeru;
+                        const horas = Math.floor(diferencia / (1000 * 60 * 60));
+                        const minutos = Math.floor((diferencia % (1000 * 60 * 60)) / (1000 * 60));
+
+                        showLockedModal(`mañana 11 de noviembre a las 5:32 p. m. (Faltan aprox. ${horas}h ${minutos}m) 💖`);
+                        return; // Detiene la apertura para que no cargue el minijuego todavía
+                    }
+                }
+
                 if (isUnlocked) {
                     card.classList.add('opening');
                     if (typeof confetti === 'function') {
@@ -761,6 +776,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 openEditor(item);
             };
             modalMedia.prepend(editBtnBtn); 
+        }
+
+        if (item.type === 'game') {
+            modalMedia.innerHTML = `
+                <div style="width: 100%; height: 420px; border-radius: 16px; overflow: hidden; box-shadow: 0 8px 25px rgba(0,0,0,0.6); margin-top: 10px;">
+                    <iframe src="${item.mediaUrl}" style="width: 100%; height: 100%; border: none;"></iframe>
+                </div>
+            `;
+            if (modal) modal.classList.add('active');
+            return;
         }
 
         const flap = document.createElement('div');
