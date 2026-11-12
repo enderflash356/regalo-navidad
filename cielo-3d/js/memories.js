@@ -1,11 +1,11 @@
 const objectsToFind = [
     // 2 Adentro de la cabaña
-    { country: 'huacho', inside: true, pos: new THREE.Vector3(-2.5, 1.01, -21.5), title: "🇵🇪 El Refugio del Café", desc: "Incluso en los días pesados, saber que estabas al otro lado del chat convertía cualquier tarde gris en un rincón cálido.", img: "../gifs/tu-imagen-o-gif-1.gif", activated: false },
-    { country: 'guatemala', inside: true, pos: new THREE.Vector3(2.5, 1.01, -21.5), title: "🇬🇹 Mixco y las 18:32", desc: "El instante exacto en que el crepúsculo cubría Guatemala y el cielo atestiguaba nuestra conexión silenciosa.", img: "../gifs/tu-imagen-o-gif-2.gif", activated: false },
+    { country: 'huacho', inside: true, pos: new THREE.Vector3(-2.5, 1.01, -21.5), title: "🇵🇪 El dia que nos conocimos", desc: "En un dia de junio, entraste a el servidor en el que nunca crei que podria encontrar al amor de mi vida...", img: "../img/recuerdo1.png", activated: false },
+    { country: 'guatemala', inside: true, pos: new THREE.Vector3(2.5, 1.01, -21.5), title: "🇬🇹 El primer te quiero sin chistes", desc: "Este dia decidi decirte un te quiero sincero, sin chistes o excusas, demostrarte que te amaba", img: "../img/recuerdo2.png", activated: false },
     
     // 2 En el Bosque Exterior
-    { country: 'huacho', inside: false, pos: new THREE.Vector3(-25, 0, -32), title: "💬 El Comienzo en Discord", desc: "Entre roles, moderación y casualidades de la vida, terminamos cruzando nuestros caminos.", img: "../gifs/tu-imagen-o-gif-3.gif", activated: false },
-    { country: 'guatemala', inside: false, pos: new THREE.Vector3(28, 0, 25), title: "💖 La Promesa del 11", desc: "Dejar los miedos atrás y elegirnos todos los días, construyendo este puente entre Perú y Guatemala.", img: "../gifs/tu-imagen-o-gif-4.gif", activated: false }
+    { country: 'huacho', inside: false, pos: new THREE.Vector3(-25, 0, -32), title: "Las platicas nocturnas...", desc: "Tuvimos diferentes charlas nocturnas, pero en una de esas me dijiste un mensaje que hasta el dia de hoy sigo amando mucho", img: "../img/recuerdo3.png", activated: false },
+    { country: 'guatemala', inside: false, pos: new THREE.Vector3(28, 0, 25), title: " La Promesa del 11", desc: "Dejamos los miedos atrás y decidimos elegirnos todos los días, construyendo este puente entre Perú y Guatemala.", img: "../img/recuerdo4.png", activated: false }
 ];
 
 let foundCount = 0;
@@ -122,7 +122,7 @@ function triggerInteraction() {
                 document.getElementById('score-val').textContent = foundCount;
                 
                 if (foundCount === 4) {
-                    showStarModal("🎉 ¡TODOS LOS RECUERDOS ENCONTRADOS!", "¡Increíble! Has unificado los dos mundos y encontrado las piezas de nuestra historia. Tu contraseña secreta es:\n\n🔑 **'13-JUL-2026-0931'**\n\nMándasela por Discord o chat para reclamar la última parte de tu regalo 💖");
+                    showStarModal("🎉 ¡TODOS LOS RECUERDOS ENCONTRADOS!", "¡YIPIII! Has juntado los dos mundos y encontrado las piezas de nuestra historia. Tu contraseña secreta es:\n\n🔑 **'13-JUL-2026-0931'**\n\nMándamela por Discord para reclamar la última parte de tu regalo 💖");
                 } else {
                     showStarModal(obj.title, obj.desc);
                 }
