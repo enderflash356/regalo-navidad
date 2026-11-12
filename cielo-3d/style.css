@@ -1,0 +1,113 @@
+* { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
+body, html { width: 100%; height: 100%; overflow: hidden; background: #000000; font-family: 'Courier New', Courier, monospace; color: #ffffff; }
+
+#canvas-container { width: 100%; height: 100%; position: absolute; top: 0; left: 0; cursor: grab; }
+#canvas-container:active { cursor: grabbing; }
+
+/* AVISO ROTACIÓN MÓVIL */
+#rotate-warning {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: #000; z-index: 999; display: none;
+    flex-direction: column; justify-content: center; align-items: center;
+    text-align: center; padding: 30px;
+}
+#rotate-warning h2 { color: #ffffff; margin-bottom: 15px; font-size: 1.5rem; }
+#rotate-warning p { color: #a1a1aa; font-size: 1rem; line-height: 1.5; max-width: 320px; }
+.rotate-icon { font-size: 4rem; margin-bottom: 15px; animation: rotatePhone 2s infinite ease-in-out; }
+@keyframes rotatePhone { 0% { transform: rotate(0deg); } 50% { transform: rotate(90deg); } 100% { transform: rotate(0deg); } }
+@media screen and (max-width: 900px) and (orientation: portrait) { #rotate-warning { display: flex; } }
+
+/* CAJA DE DIÁLOGO / INTRO ESTILO UNDERTALE */
+#intro-overlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.85); z-index: 100; display: flex; flex-direction: column;
+    justify-content: center; align-items: center; padding: 20px; text-align: center;
+}
+.dialogue-box {
+    border: 4px solid #ffffff; background: #000000; padding: 25px; border-radius: 4px;
+    max-width: 620px; width: 100%; min-height: 150px; display: flex; align-items: center;
+    box-shadow: 0 0 0 4px #000, 0 0 25px rgba(255, 255, 255, 0.2);
+}
+#dialogue-text { font-size: 1.15rem; line-height: 1.6; color: #ffffff; text-align: left; font-family: 'Courier New', Courier, monospace; font-weight: bold; }
+.skip-intro {
+    margin-top: 20px; background: #000000; border: 2px solid #ffffff;
+    color: #ffffff; padding: 8px 18px; border-radius: 4px; cursor: pointer; font-size: 0.9rem;
+    font-family: 'Courier New', Courier, monospace; font-weight: bold; transition: background 0.2s;
+}
+.skip-intro:hover { background: #ffffff; color: #000000; }
+
+/* UI SUPERIOR */
+#ui-overlay {
+    position: absolute; top: 20px; left: 0; width: 100%; display: flex;
+    justify-content: space-between; align-items: center; padding: 0 25px; z-index: 10; pointer-events: none;
+}
+.interactive-elem { pointer-events: auto; }
+
+.location-switch, .music-toggle {
+    background: #000000; border: 2px solid #ffffff;
+    padding: 8px 16px; border-radius: 4px; color: white; font-weight: bold; cursor: pointer;
+    font-family: 'Courier New', Courier, monospace; font-size: 0.85rem; box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+    transition: all 0.2s;
+}
+.location-switch:hover, .music-toggle:hover { background: #ffffff; color: #000000; }
+
+.info-pill {
+    background: #000000; border: 2px solid #ffffff;
+    padding: 8px 16px; border-radius: 4px; font-size: 0.8rem; color: #ffffff; font-weight: bold;
+}
+
+#minigame-score {
+    position: absolute; top: 75px; left: 25px; background: #000000;
+    border: 2px solid #fbbf24; padding: 6px 14px; border-radius: 4px; font-size: 0.8rem;
+    color: #fbbf24; z-index: 10; font-weight: bold;
+}
+
+/* JOYSTICK TÁCTIL */
+#joystick-zone {
+    position: absolute; bottom: 30px; left: 30px; width: 110px; height: 110px;
+    background: rgba(255, 255, 255, 0.05); border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%; z-index: 15; touch-action: none;
+    display: flex; justify-content: center; align-items: center;
+}
+#joystick-knob {
+    width: 45px; height: 45px; background: #ffffff;
+    border-radius: 50%; position: absolute; pointer-events: none;
+}
+@media (pointer: fine) { #joystick-zone { display: none; } }
+
+/* BOTÓN DE INTERACCIÓN */
+#interact-btn {
+    position: absolute; bottom: 35px; right: 35px; width: 72px; height: 72px;
+    background: #000000; border: 3px solid #ffffff;
+    border-radius: 50%; color: white; font-size: 1.5rem; font-weight: bold;
+    display: none; justify-content: center; align-items: center; z-index: 15;
+    cursor: pointer; box-shadow: 0 0 15px rgba(255,255,255,0.4);
+}
+#interact-btn.active { display: flex; animation: pulseBtn 1s infinite alternate; }
+@keyframes pulseBtn { 0% { transform: scale(1); } 100% { transform: scale(1.1); } }
+
+/* INSTRUCCIONES INFERIOR */
+#instructions-box {
+    position: absolute; bottom: 12px; left: 50%; transform: translateX(-50%);
+    background: #000000; border: 2px solid rgba(255, 255, 255, 0.4);
+    padding: 6px 18px; border-radius: 4px; z-index: 10; text-align: center; max-width: 90%; width: 560px;
+}
+#instructions-box p { color: #e2e8f0; font-size: 0.75rem; }
+#instructions-box span { color: #f43f5e; font-weight: bold; }
+
+/* MODAL / CAJA DE DIÁLOGO DE RECUERDOS / CONTRASEÑA */
+#star-modal {
+    position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(140px);
+    background: #000000; border: 4px solid #ffffff; padding: 25px 30px;
+    border-radius: 4px; max-width: 450px; width: 90%; text-align: center; z-index: 20;
+    box-shadow: 0 0 0 4px #000, 0 15px 40px rgba(0,0,0,0.9);
+    transition: all 0.3s ease; opacity: 0; pointer-events: none;
+}
+#star-modal.active { transform: translateX(-50%) translateY(0); opacity: 1; pointer-events: auto; }
+#star-modal h3 { color: #ffffff; margin-bottom: 12px; font-size: 1.2rem; font-family: 'Courier New', Courier, monospace; }
+#star-modal p { color: #cbd5e1; font-size: 0.95rem; line-height: 1.5; font-family: 'Courier New', Courier, monospace; }
+#star-modal button {
+    margin-top: 15px; background: #000000; border: 2px solid #ffffff; color: white; padding: 8px 20px;
+    border-radius: 4px; cursor: pointer; font-weight: bold; font-family: 'Courier New', Courier, monospace;
+}
+#star-modal button:hover { background: #ffffff; color: #000000; }

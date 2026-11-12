@@ -110,11 +110,11 @@ const adventDaysData = [
     {
         "day": 12,
         "date": "2026-11-12",
-        "title": "Dia 12: ",
-        "content": "",
-        "type": "text",
-        "textColor": "#e2e8f0",
-        "mediaUrl": ""
+        "title": "Día 12: Bajo el mismo cielo 🌌✨",
+        "content": "Dicen que aunque la distancia sea grande, siempre estamos bajo el mismo cielo...",
+        "type": "game",
+        "textColor": "#ffffff",
+        "mediaUrl": "cielo-3d/index.html"
     },
     {
         "day": 13,

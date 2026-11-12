@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>El Cielo Que Lo Vio Todo - GOTY Edition</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+<body>
+
+    <div id="rotate-warning">
+        <div class="rotate-icon">📱</div>
+        <h2>¡Voltea tu teléfono! 💖</h2>
+        <p>Para explorar este observatorio 3D, gira tu celular en horizontal.</p>
+    </div>
+
+    <div id="intro-overlay">
+        <div class="dialogue-box"><div id="dialogue-text"></div></div>
+        <button class="skip-intro interactive-elem" onclick="skipIntro()">Saltar intro ⏭️</button>
+    </div>
+
+    <div id="ui-overlay">
+        <div class="info-pill interactive-elem">📅 11 Oct 2026 • 18:32</div>
+        <div style="display: flex; gap: 8px;">
+            <button id="music-btn" class="music-toggle interactive-elem" onclick="toggleMusic()">🎵 Música: Off</button>
+            <button id="loc-btn" class="location-switch interactive-elem" onclick="toggleLocation()">🇵🇪 Huacho</button>
+        </div>
+    </div>
+
+    <div id="minigame-score">🎒 Recuerdos: <span id="score-val">0</span> / 4</div>
+    
+    <div id="joystick-zone"><div id="joystick-knob"></div></div>
+    <div id="interact-btn">🚪</div>
+
+    <div id="canvas-container"></div>
+
+    <div id="instructions-box">
+        <p>🎮 <span>Moverse:</span> WASD / Palanca &nbsp;|&nbsp; <span>Puerta/Recoger:</span> [E] o Botón &nbsp;|&nbsp; <span>Mirar:</span> Arrastra pantalla</p>
+    </div>
+
+    <div id="star-modal">
+        <h3 id="modal-star-title">✨ Recuerdo</h3>
+        <div id="modal-star-desc">...</div>
+        <button onclick="closeStarModal()">Continuar 💖</button>
+    </div>
+
+    <audio id="bg-audio" loop src="../media/musica11.mp3"></audio>
+
+    <!-- Módulos de JavaScript en orden -->
+    <script src="js/intro.js"></script>
+    <script src="js/controls.js"></script>
+    <script src="js/environment.js"></script>
+    <script src="js/astronomy.js"></script>
+    <script src="js/memories.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
