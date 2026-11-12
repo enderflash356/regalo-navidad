@@ -36,7 +36,9 @@ window.addEventListener('keydown', (e) => {
     if (['s','S','ArrowDown'].includes(e.key)) moveState.forward = -1;
     if (['d','D','ArrowRight'].includes(e.key)) moveState.right = 1;
     if (['a','A','ArrowLeft'].includes(e.key)) moveState.right = -1;
-    if (e.key === 'e' || e.key === 'E') triggerInteraction();
+    if (e.key === 'e' || e.key === 'E') {
+        if (typeof triggerInteraction === 'function') triggerInteraction();
+    }
 });
 
 window.addEventListener('keyup', (e) => {
@@ -49,36 +51,49 @@ window.addEventListener('keyup', (e) => {
 // 2. CREAR CONTROLES TÁCTILES Y GESTOS (CELULAR)
 // ==========================================
 function createMobileControls() {
-    // Si ya existen, no los duplica
     if (document.getElementById('virtual-joystick-container')) return;
 
     // Contenedor de la cruceta de movimiento (Esquina Inferior Izquierda)
     const container = document.createElement('div');
     container.id = 'virtual-joystick-container';
     container.style.cssText = `
-        position: fixed; bottom: 25px; left: 25px; z-index: 999;
-        display: grid; grid-template-columns: 60px 60px 60px; grid-template-rows: 60px 60px;
-        gap: 8px; user-select: none; touch-action: none; opacity: 0.9;
+        position: fixed; bottom: 30px; left: 30px; z-index: 99999;
+        display: grid; grid-template-columns: 65px 65px 65px; grid-template-rows: 65px 65px;
+        gap: 6px; user-select: none; touch-action: none;
     `;
 
     const createBtn = (text, gridArea, onDown, onUp) => {
         const btn = document.createElement('button');
         btn.textContent = text;
         btn.style.cssText = `
-            grid-area: ${gridArea}; background: rgba(30, 41, 59, 0.75); color: white;
-            border: 2px solid rgba(255, 255, 255, 0.3); border-radius: 14px;
-            font-size: 22px; font-weight: bold; display: flex; align-items: center;
+            grid-area: ${gridArea}; background: rgba(15, 23, 42, 0.8); color: white;
+            border: 2px solid rgba(255, 255, 255, 0.4); border-radius: 16px;
+            font-size: 24px; font-weight: bold; display: flex; align-items: center;
             justify-content: center; outline: none; cursor: pointer;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5); -webkit-tap-highlight-color: transparent;
         `;
         
-        const activate = (e) => { e.preventDefault(); onDown(); btn.style.background = 'rgba(56, 189, 248, 0.7)'; };
-        const deactivate = (e) => { e.preventDefault(); onUp(); btn.style.background = 'rgba(30, 41, 59, 0.75)'; };
+        const activate = (e) => { 
+            e.preventDefault(); 
+            onDown(); 
+            btn.style.background = 'rgba(56, 189, 248, 0.8)'; 
+        };
+        
+        const deactivate = (e) => { 
+            if (e) e.preventDefault(); 
+            onUp(); 
+            btn.style.background = 'rgba(15, 23, 42, 0.8)'; 
+        };
 
+        // Eventos táctiles robustos para que no se queden pegados
         btn.addEventListener('touchstart', activate, { passive: false });
         btn.addEventListener('touchend', deactivate, { passive: false });
+        btn.addEventListener('touchcancel', deactivate, { passive: false });
+        
+        // Soporte por si se abre en emulador o pantalla táctil con mouse
         btn.addEventListener('mousedown', activate);
         btn.addEventListener('mouseup', deactivate);
+        btn.addEventListener('mouseleave', deactivate);
         
         return btn;
     };
@@ -96,16 +111,17 @@ function createMobileControls() {
 
 
     // ==========================================
-    // 3. ASEGURAR QUE EL BOTÓN "ABRIR / ENTRAR" RESPONDA AL TACTO
+    // 3. ASEGURAR INTERACCIÓN TÁCTIL EN EL BOTÓN DE ABRE/ENTRA
     // ==========================================
     const interactBtn = document.getElementById('interact-btn');
     if (interactBtn) {
-        // Aseguramos que el toque táctil dispare la interacción igual que un clic
+        interactBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            if (typeof triggerInteraction === 'function') triggerInteraction();
+        });
         interactBtn.addEventListener('touchstart', (e) => {
             e.preventDefault();
-            if (typeof triggerInteraction === 'function') {
-                triggerInteraction();
-            }
+            if (typeof triggerInteraction === 'function') triggerInteraction();
         }, { passive: false });
     }
 
@@ -118,7 +134,7 @@ function createMobileControls() {
     let prevTouchY = 0;
 
     window.addEventListener('touchstart', (e) => {
-        // Si toca los botones de movimiento o el botón de interactuar, ignorar rotación de cámara
+        // Ignorar si toca la cruceta o los botones de interfaz
         if (e.target.closest('#virtual-joystick-container') || e.target.closest('#interact-btn') || e.target.closest('#loc-btn')) {
             return;
         }
@@ -155,7 +171,10 @@ function createMobileControls() {
     });
 }
 
-// Iniciar controles táctiles al cargar la página
-window.addEventListener('load', () => {
+// Iniciar controles táctiles de inmediato y también al cargar la ventana
+if (document.readyState === 'complete' || document.readyState === 'interactive') {
     createMobileControls();
-});
+} else {
+    window.addEventListener('DOMContentLoaded', createMobileControls);
+    window.addEventListener('load', createMobileControls);
+}
