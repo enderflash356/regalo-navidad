@@ -1,11 +1,11 @@
 const objectsToFind = [
     // 2 Adentro de la cabaña
-    { country: 'huacho', inside: true, pos: new THREE.Vector3(-2.5, 1.01, -21.5), title: "🇵🇪 El dia que nos conocimos", desc: "En un dia de junio, entraste a el servidor en el que nunca crei que podria encontrar al amor de mi vida...", img: "../img/recuerdo1.png", activated: false },
-    { country: 'guatemala', inside: true, pos: new THREE.Vector3(2.5, 1.01, -21.5), title: "🇬🇹 El primer te quiero sin chistes", desc: "Este dia decidi decirte un te quiero sincero, sin chistes o excusas, demostrarte que te amaba", img: "../img/recuerdo2.png", activated: false },
+    { country: 'huacho', inside: true, pos: new THREE.Vector3(-2.5, 1.01, -21.5), title: "🇵🇪 El dia que nos conocimos", desc: "En un dia de junio, entraste a el servidor en el que nunca crei que podria encontrar al amor de mi vida...", img: "img/recuerdo1.png", activated: false },
+    { country: 'guatemala', inside: true, pos: new THREE.Vector3(2.5, 1.01, -21.5), title: "🇬🇹 El primer te quiero sin chistes", desc: "Este dia decidi decirte un te quiero sincero, sin chistes o excusas, demostrarte que te amaba", img: "img/recuerdo2.png", activated: false },
     
     // 2 En el Bosque Exterior
-    { country: 'huacho', inside: false, pos: new THREE.Vector3(-25, 0, -32), title: "Las platicas nocturnas...", desc: "Tuvimos diferentes charlas nocturnas, pero en una de esas me dijiste un mensaje que hasta el dia de hoy sigo amando mucho", img: "../img/recuerdo3.png", activated: false },
-    { country: 'guatemala', inside: false, pos: new THREE.Vector3(28, 0, 25), title: " La Promesa del 11", desc: "Dejamos los miedos atrás y decidimos elegirnos todos los días, construyendo este puente entre Perú y Guatemala.", img: "../img/recuerdo4.png", activated: false }
+    { country: 'huacho', inside: false, pos: new THREE.Vector3(-25, 0, -32), title: "Las platicas nocturnas...", desc: "Tuvimos diferentes charlas nocturnas, pero en una de esas me dijiste un mensaje que hasta el dia de hoy sigo amando mucho", img: "img/recuerdo3.png", activated: false },
+    { country: 'guatemala', inside: false, pos: new THREE.Vector3(28, 0, 25), title: " La Promesa del 11", desc: "Dejamos los miedos atrás y decidimos elegirnos todos los días, construyendo este puente entre Perú y Guatemala.", img: "img/recuerdo4.png", activated: false }
 ];
 
 let foundCount = 0;
@@ -106,13 +106,13 @@ function triggerInteraction() {
                     const planeMat = new THREE.MeshBasicMaterial({ map: texture, transparent: true, side: THREE.DoubleSide });
                     const floatingPic = new THREE.Mesh(new THREE.PlaneGeometry(1.4, 0.9), planeMat);
                     
-                    // Altura base inicial para que flote elegante
                     floatingPic.position.set(0, 1.4, 0);
-                    
-                    // Activamos billboard y animación de flotación
                     floatingPic.userData = { isBillboard: true, isFloating: true, basePosY: 1.4 };
                     obj.mesh.add(floatingPic);
-                }, undefined, () => {
+                }, undefined, (err) => {
+                    // --- AQUÍ VEREMOS EL ERROR EXACTO ---
+                    console.error("🚨 ERROR FATAL CARGANDO IMAGEN:", obj.img, err);
+                    
                     const fallbackMesh = new THREE.Mesh(new THREE.PlaneGeometry(1.4, 0.9), new THREE.MeshBasicMaterial({ color: 0xffffff }));
                     fallbackMesh.position.set(0, 1.4, 0);
                     fallbackMesh.userData = { isBillboard: true, isFloating: true, basePosY: 1.4 };
