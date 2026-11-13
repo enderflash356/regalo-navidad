@@ -146,8 +146,8 @@ const adventDaysData = [
     {
         "day": 16,
         "date": "2026-11-16",
-        "title": "Dia 16: ",
-        "content": "",
+        "title": "Dia 16: Carta para ti :p",
+        "content": "Aqui un enlace para tu carta (juro que no tiene virus bleh):\nhttps://gifft.me/es/o/l/xtujvhnlg8gcw7gq59wva0cj",
         "type": "text",
         "textColor": "#e2e8f0",
         "mediaUrl": ""
