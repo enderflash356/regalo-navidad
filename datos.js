@@ -128,10 +128,10 @@ const adventDaysData = [
     {
         "day": 14,
         "date": "2026-11-14",
-        "title": "Dia 14: ",
-        "content": "",
+        "title": "Dia 14: Mi mundo",
+        "content": "A veces me pongo a pensar en esas inseguridades que de repente te pasan por la cabeza, y solo quiero recordarte algo muy je. Si alguna vez te llegas a preguntar si hay más chicas lindas por ahí, déjame decirte que la respuesta es obvia: para mí no hay competencia de nada.\n\nPodrán haber muchas personas en el mundo, pero en mi pequeño universo solo existes tú, y eres por mucho la mejor de todas. No hay nadie más que se te compare ni alguien que logre hacerme sentir lo que tú me haces sentir. Así que recuérdalo siempre, tú eres mi mundo entero y mi persona favorita, hoy y siempre.",
         "type": "text",
-        "textColor": "#e2e8f0",
+        "textColor": "#ba0abd",
         "mediaUrl": ""
     },
     {
