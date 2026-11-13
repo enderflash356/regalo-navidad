@@ -137,10 +137,10 @@ const adventDaysData = [
     {
         "day": 15,
         "date": "2026-11-15",
-        "title": "Dia 15: ",
-        "content": "",
+        "title": "Dia 15: Gracias por...",
+        "content": "Quería tomarme un momentito de este calendario para darte las gracias por tantas cosas que tal vez a veces no te digo con palabras, pero que valoro muchísimo en el día a día.\n\nGracias por estar ahí, por compartir tus ratos conmigo y por hacer que la distancia se sienta un poquito más corta. Pero sobre todo, gracias porque contigo puedo ser exactamente como soy, sin filtros ni miedos; nunca me haces sentir mal y me das esa paz tan bonita. Gracias por permitirme escucharte, verte y ser parte de tu vida, por oírme siempre con paciencia y por cada detalle, cada risa compartida y toda la dulzura que me regalas.\n\nNo tienes idea de lo bonita que es la vida desde que coincidimos, y te agradezco de corazón por ser tan linda conmigo y por todo lo lindo que me das siempre.",
         "type": "text",
-        "textColor": "#e2e8f0",
+        "textColor": "#00db1a",
         "mediaUrl": ""
     },
     {
