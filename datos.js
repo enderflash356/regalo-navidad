@@ -173,8 +173,8 @@ const adventDaysData = [
     {
         "day": 19,
         "date": "2026-11-19",
-        "title": "Dia 19: ",
-        "content": "",
+        "title": "Dia 19: Me siento orgulloso de ti",
+        "content": "Hoy quería tomarme un momento para decirte lo orgulloso que estoy de ti.\n\nDe cómo eres, de cómo te esfuerzas todos los días aunque a veces no tengas ganas de nada, y de que sigues aquí, y conmigo. Estoy orgulloso de que seas tú misma, tal cual, sin filtros, y de la paciencia que me tienes a pesar de mis babosadas bleh. Valoro cada pequeña cosa, cada detalle y todo el tiempo que me dedicas, aunque a veces los días sean grises.\n\nNo te imaginas lo mucho que te admiro y lo feliz que me hace saber que compartes tu vida y tus días conmigo. Te amo :3",
         "type": "text",
         "textColor": "#e2e8f0",
         "mediaUrl": ""
