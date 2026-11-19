@@ -76,6 +76,7 @@
 
     <!-- Modal de los Días Abiertos -->
     <!-- Modal de los Días Abiertos -->
+    <!-- Modal de los Días Abiertos -->
     <div class="modal-overlay" id="modal">
         <div class="modal-content">
             <button class="close-btn" id="modal-close">&times;</button>
@@ -87,6 +88,9 @@
             <h2 id="modal-title" style="color: var(--accent)"></h2>
             <div class="modal-body" id="modal-body"></div>
             <div class="media-container" id="modal-media"></div>
+
+            <!-- Girasol interactivo solo para el Día 20 -->
+            <div id="sunflowerDay20Container" class="sunflower-modal-slot" style="display: none;"></div>
         </div>
     </div>
 
@@ -181,7 +185,187 @@
     <!-- Scripts al final, cargados en orden correcto -->
 
                 
+    <!-- Scripts al final, cargados en orden correcto -->
     <script src="datos.js"></script>
+    <script>
+      function initSunflower(container) {
+        if (!container) return;
+
+        if (container.dataset.sfInitialized === "true") {
+          container.dispatchEvent(new Event("sunflower:resize"));
+          return;
+        }
+        container.dataset.sfInitialized = "true";
+
+        container.innerHTML = `
+          <div class="sf-scene">
+            <div class="sf-controls">
+              <button type="button" class="sf-btn sf-mode-btn">Modo Noche</button>
+              <button type="button" class="sf-btn sf-breeze-btn">Brisa: Suave</button>
+            </div>
+            <canvas class="sf-canvas"></canvas>
+            <div class="sf-hint">Mueve el cursor o haz clic sobre el girasol</div>
+          </div>
+        `;
+
+        const scene = container.querySelector(".sf-scene");
+        const canvas = container.querySelector(".sf-canvas");
+        const modeBtn = container.querySelector(".sf-mode-btn");
+        const breezeBtn = container.querySelector(".sf-breeze-btn");
+        const ctx = canvas.getContext("2d");
+
+        let width = 0, height = 0, dpr = 1;
+        let isNight = false, breezeLevel = 1, time = 0, pulse = 0;
+        const pointer = { x: null, y: null, active: false };
+        const particles = [];
+
+        function resize() {
+          const rect = scene.getBoundingClientRect();
+          width = Math.max(260, rect.width || container.clientWidth || 400);
+          height = Math.max(320, rect.height || container.clientHeight || 380);
+          dpr = Math.min(window.devicePixelRatio || 1, 2);
+          canvas.width = Math.floor(width * dpr);
+          canvas.height = Math.floor(height * dpr);
+          ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        }
+
+        function spawnBurst(cx, cy, count = 20) {
+          for (let i = 0; i < count; i++) {
+            const angle = (Math.PI * 2 * i) / count + (Math.random() - 0.5) * 0.35;
+            const speed = 1.1 + Math.random() * 2.5;
+            particles.push({
+              x: cx, y: cy,
+              vx: Math.cos(angle) * speed,
+              vy: Math.sin(angle) * speed - 0.5,
+              size: 2 + Math.random() * 3,
+              alpha: 1,
+              decay: 0.015 + Math.random() * 0.012
+            });
+          }
+        }
+
+        function draw() {
+          time += 0.016;
+          pulse = Math.max(0, pulse - 0.035);
+          ctx.clearRect(0, 0, width, height);
+
+          const sway = Math.sin(time * (breezeLevel === 2 ? 2.4 : 1.35)) * (breezeLevel === 0 ? 0.008 : breezeLevel === 1 ? 0.025 : 0.05);
+          const baseX = width * 0.5;
+          const baseY = height * 0.9;
+          const scale = Math.min(width / 480, height / 480, 1.05);
+          const stemH = 165 * scale;
+
+          let tiltX = 0, tiltY = 0;
+          const topX = baseX + Math.sin(sway) * stemH;
+          const topY = baseY - Math.cos(sway) * stemH;
+          if (pointer.active && pointer.x !== null) {
+            tiltX = Math.max(-14, Math.min(14, ((pointer.x - topX) / (width * 0.5)) * 12));
+            tiltY = Math.max(-10, Math.min(10, ((pointer.y - topY) / (height * 0.5)) * 10));
+          }
+
+          const headX = topX + tiltX;
+          const headY = topY + tiltY;
+
+          ctx.strokeStyle = isNight ? "#2c6e3f" : "#458732";
+          ctx.lineWidth = Math.max(7, 11 * scale);
+          ctx.lineCap = "round";
+          ctx.beginPath();
+          ctx.moveTo(baseX, baseY);
+          ctx.quadraticCurveTo(baseX + tiltX * 0.3, baseY - stemH * 0.5, headX, headY);
+          ctx.stroke();
+
+          ctx.save();
+          ctx.translate(headX, headY);
+          ctx.scale(1 + pulse * 0.06, 1 + pulse * 0.06);
+
+          const petals = 20;
+          for (let i = 0; i < petals; i++) {
+            ctx.save();
+            ctx.rotate((Math.PI * 2 * i) / petals + Math.sin(time * 2 + i) * 0.025);
+            ctx.fillStyle = i % 2 === 0 ? "#ffb703" : "#ffd166";
+            ctx.beginPath();
+            ctx.moveTo(0, 0);
+            ctx.bezierCurveTo(-15 * scale, -25 * scale, -14 * scale, -68 * scale, 0, -78 * scale);
+            ctx.bezierCurveTo(14 * scale, -68 * scale, 15 * scale, -25 * scale, 0, 0);
+            ctx.fill();
+            ctx.restore();
+          }
+
+          const rDisk = 34 * scale;
+          ctx.fillStyle = "#3b1d0a";
+          ctx.beginPath();
+          ctx.arc(0, 0, rDisk, 0, Math.PI * 2);
+          ctx.fill();
+
+          const golden = Math.PI * (3 - Math.sqrt(5));
+          for (let n = 1; n <= 160; n++) {
+            const f = n / 160;
+            const rad = Math.sqrt(f) * (rDisk - 3 * scale);
+            const ang = n * golden + time * 0.08;
+            ctx.fillStyle = f > 0.65 ? "#8c4a19" : "#5e2e0d";
+            ctx.beginPath();
+            ctx.arc(Math.cos(ang) * rad, Math.sin(ang) * rad, 1.5 * scale, 0, Math.PI * 2);
+            ctx.fill();
+          }
+          ctx.restore();
+
+          for (let i = particles.length - 1; i >= 0; i--) {
+            const p = particles[i];
+            p.x += p.vx;
+            p.y += p.vy;
+            p.alpha -= p.decay;
+            if (p.alpha <= 0) {
+              particles.splice(i, 1);
+              continue;
+            }
+            ctx.save();
+            ctx.globalAlpha = p.alpha;
+            ctx.fillStyle = "#fff176";
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.restore();
+          }
+
+          requestAnimationFrame(draw);
+        }
+
+        modeBtn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          isNight = !isNight;
+          scene.classList.toggle("is-night", isNight);
+          modeBtn.textContent = isNight ? "Modo Día" : "Modo Noche";
+        });
+
+        breezeBtn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          breezeLevel = (breezeLevel + 1) % 3;
+          breezeBtn.textContent = ["Brisa: Calma", "Brisa: Suave", "Brisa: Animada"][breezeLevel];
+        });
+
+        canvas.addEventListener("pointermove", (e) => {
+          const rect = canvas.getBoundingClientRect();
+          pointer.x = e.clientX - rect.left;
+          pointer.y = e.clientY - rect.top;
+          pointer.active = true;
+        });
+
+        canvas.addEventListener("pointerleave", () => {
+          pointer.active = false;
+        });
+
+        canvas.addEventListener("click", (e) => {
+          const rect = canvas.getBoundingClientRect();
+          pulse = 1;
+          spawnBurst(e.clientX - rect.left, e.clientY - rect.top, 20);
+        });
+
+        container.addEventListener("sunflower:resize", resize);
+        new ResizeObserver(resize).observe(scene);
+        resize();
+        draw();
+      }
+    </script>
     <script src="app.js"></script>
     <script src="features.js"></script>
 </body>

@@ -180,13 +180,14 @@ const adventDaysData = [
         "mediaUrl": ""
     },
     {
-        "day": 20,
-        "date": "2026-11-20",
-        "title": "Dia 20: ",
-        "content": "",
-        "type": "text",
-        "textColor": "#e2e8f0",
-        "mediaUrl": ""
+  "day": 20,
+  "date": "2026-11-20",
+  "title": "Día 20: Tu flor favorita para mi persona favorita :3",
+  "content": "Pues como no puedo darte flores, entonces te dare una virtual... bleh",
+  "type": "text",
+  "textColor": "#e2e8f0",
+  "mediaUrl": "",
+  "hasSunflower": true
     },
     {
         "day": 21,

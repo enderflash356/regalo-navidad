@@ -745,6 +745,30 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    function syncSunflowerModal(item) {
+        const sunflowerBox = document.getElementById('sunflowerDay20Container');
+        if (!sunflowerBox) return;
+
+        const isDay20 = Boolean(
+            item && (
+                Number(item.day) === 20 ||
+                item.date === '2026-11-20' ||
+                item.hasSunflower === true
+            )
+        );
+
+        if (isDay20) {
+            sunflowerBox.style.display = 'block';
+            requestAnimationFrame(() => {
+                if (typeof initSunflower === 'function') {
+                    initSunflower(sunflowerBox);
+                }
+            });
+        } else {
+            sunflowerBox.style.display = 'none';
+        }
+    }
+
     
     function openModal(item) {
         currentOpenDayNum = item.day;
@@ -763,6 +787,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (item.type === 'embed'){
             modalMedia.innerHTML = item.mediaUrl;
+            syncSunflowerModal(item);
             if (modal) modal.classList.add('active');
             return;
         }
@@ -784,6 +809,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <iframe src="${item.mediaUrl}" style="width: 100%; height: 100%; border: none;"></iframe>
                 </div>
             `;
+            syncSunflowerModal(item);
             if (modal) modal.classList.add('active');
             return;
         }
@@ -813,7 +839,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 modalMedia.innerHTML += `<video controls src="${item.mediaUrl}" style="max-width: 100%; border-radius: 10px;"></video>`;
             }
         }
+        syncSunflowerModal(item);
         if (modal) modal.classList.add('active');
+    }
+
+    function hideSunflowerModal() {
+        const sunflowerBox = document.getElementById('sunflowerDay20Container');
+        if (sunflowerBox) sunflowerBox.style.display = 'none';
     }
 
     if (modalClose) modalClose.addEventListener('click', () => modal.classList.remove('active'));

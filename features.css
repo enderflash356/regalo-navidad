@@ -1780,3 +1780,81 @@ body::before {
     transform: translateY(-2px) scale(1.02) !important;
     box-shadow: 0 6px 20px rgba(168, 85, 247, 0.6) !important;
 }
+
+.sunflower-modal-slot {
+  width: 100%;
+  height: 380px;
+  margin-top: 14px;
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.sf-scene {
+  --bg-top: #dceeff;
+  --bg-mid: #f7fbff;
+  --bg-bot: #e6f4d7;
+  --panel-bg: rgba(255, 255, 255, 0.78);
+  --panel-text: #273226;
+  --panel-border: rgba(39, 50, 38, 0.14);
+
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(180deg, var(--bg-top) 0%, var(--bg-mid) 62%, var(--bg-bot) 100%);
+  transition: background 0.5s ease, color 0.4s ease;
+  user-select: none;
+}
+
+.sf-scene.is-night {
+  --bg-top: #090e1d;
+  --bg-mid: #131d38;
+  --bg-bot: #162629;
+  --panel-bg: rgba(17, 25, 46, 0.78);
+  --panel-text: #eef3ff;
+  --panel-border: rgba(238, 243, 255, 0.16);
+}
+
+.sf-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+}
+
+.sf-controls {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  display: flex;
+  gap: 8px;
+  z-index: 3;
+}
+
+.sf-btn {
+  border: 1px solid var(--panel-border);
+  background: var(--panel-bg);
+  color: var(--panel-text);
+  backdrop-filter: blur(8px);
+  padding: 6px 11px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.sf-hint {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--panel-bg);
+  color: var(--panel-text);
+  border: 1px solid var(--panel-border);
+  backdrop-filter: blur(8px);
+  padding: 5px 12px;
+  border-radius: 999px;
+  font-size: 11.5px;
+  pointer-events: none;
+  white-space: nowrap;
+  z-index: 3;
+}
