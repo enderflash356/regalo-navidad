@@ -1858,3 +1858,18 @@ body::before {
   white-space: nowrap;
   z-index: 3;
 }
+
+.acrostic-line {
+    margin: 4px 0;
+    line-height: 1.45;
+}
+
+.acrostic-initial {
+    display: inline-block;
+    font-size: 1.55em;
+    font-weight: 800;
+    color: #fbbf24;
+    line-height: 1;
+    margin-right: 2px;
+    text-shadow: 0 0 12px rgba(251, 191, 36, 0.35);
+}

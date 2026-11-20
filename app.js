@@ -776,11 +776,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (modalTitle) modalTitle.textContent = item.title || `Día ${item.day}`;
         if (modalBody) {
-            modalBody.textContent = item.content || 'Muy pronto jejeje...';
+            const rawText = item.content || 'Muy pronto jejeje...';
             if (item.textColor) {
                 modalBody.style.color = item.textColor;
             } else {
                 modalBody.style.color = '#e2e8f0';
+            }
+
+            const isAcrosticDay = Number(item.day) === 21 || item.hasAcrostic === true;
+            const lines = rawText.split('\n').filter(line => line.trim() !== '');
+
+            if (isAcrosticDay && lines.length > 1) {
+                modalBody.innerHTML = lines.map(line => {
+                    const trimmed = line.trimStart();
+                    const firstChar = trimmed.charAt(0);
+                    const rest = trimmed.slice(1);
+                    return `<p class="acrostic-line"><span class="acrostic-initial">${firstChar}</span>${rest}</p>`;
+                }).join('');
+            } else {
+                modalBody.textContent = rawText;
             }
         }
         if (modalMedia) modalMedia.innerHTML = '';
