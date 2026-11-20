@@ -380,7 +380,7 @@ const adventDaysData = [
     {
         "day": 42,
         "date": "2026-12-12",
-        "title": "Dia 42: ",
+        "title": "Dia 42: Dos meses juntos :3",
         "content": "",
         "type": "text",
         "textColor": "#e2e8f0",
