@@ -209,8 +209,8 @@ const adventDaysData = [
     {
         "day": 23,
         "date": "2026-11-23",
-        "title": "Dia 23: ",
-        "content": "",
+        "title": "Dia 23: El contraste de tenerte",
+        "content": "A veces mis días se sienten bien monótonos y aburridos, como si no hubiera casi nada que hacer o todo avanzara igual. Pero de pronto llegas tú y todo cambia.... te vuelves algo súper especial y me sacas de esa monotonía sin siquiera intentarlo.\n\nMe encanta cómo nos complementamos, como si encajáramos en lo que a cada uno le hace falta o le ilumina el día. También me alegra un montón poder ser tu sol, darte calidez y estar ahí para ti, porque eres mi amor verdadero, mi amada esposa.\n\nTe amo mucho, mucho, y me hace muy feliz tenerte en mi vida rompiendo la rutina de la forma más bonita. :3\nMi bobita tierna jeje",
         "type": "text",
         "textColor": "#e2e8f0",
         "mediaUrl": ""
