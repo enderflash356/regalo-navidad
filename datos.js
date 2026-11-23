@@ -227,8 +227,8 @@ const adventDaysData = [
     {
         "day": 25,
         "date": "2026-11-25",
-        "title": "Dia 25: ",
-        "content": "",
+        "title": "Dia 25: Por qué eres tan valiosa para mí",
+        "content": "A veces me detengo a pensar en lo valiosa que eres para mí y me doy cuenta de que eres la mejor persona y la más maravillosa que he conocido. Admiro profundamente cómo eres, cada pequeña parte de tu personalidad y esa manera tan bonita que tienes de existir y de estar en mi vida.\n\nContigo encontré algo que no había sentido antes... eres la única persona con la que nunca siento que estorbo, con quien puedo estar tranquilo sabiendo que mi lugar aquí es real y querido. Eres mi motivación, mi mundo y mi razón de seguir adelante cada día.\n\nTe amo muchísimo, mi amada, y me siento increíblemente afortunado de tenerte a mi lado.",
         "type": "text",
         "textColor": "#e2e8f0",
         "mediaUrl": ""
