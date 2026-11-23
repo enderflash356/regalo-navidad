@@ -218,8 +218,8 @@ const adventDaysData = [
     {
         "day": 24,
         "date": "2026-11-24",
-        "title": "Dia 24: ",
-        "content": "",
+        "title": "Dia 24: Pelicula/serie bleh",
+        "content": "Hoy pelicula o serie, jiji\n",
         "type": "text",
         "textColor": "#e2e8f0",
         "mediaUrl": ""
