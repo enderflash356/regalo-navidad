@@ -236,8 +236,8 @@ const adventDaysData = [
     {
         "day": 26,
         "date": "2026-11-26",
-        "title": "Dia 26: ",
-        "content": "",
+        "title": "Dia 26: Videos del centro comercial bleh",
+        "content": "Okay si, no es que no tenga ideas, pero ya lo tenia pensado hacer si o si, pero igual te pregunte. No los envio por aqui porque solo puedo subir un video jeje... pero espero te guste el pequeño tour que hice para ti bleh...",
         "type": "text",
         "textColor": "#e2e8f0",
         "mediaUrl": ""
