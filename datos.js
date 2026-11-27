@@ -270,14 +270,14 @@ const adventDaysData = [
         "mediaUrl": ""
     },
     {
-        "day": 30,
-        "date": "2026-11-30",
-        "title": "Dia 30: Te quiere casar conmigo? :p",
-        "content": "Se que es repentino je... pero queria \"simular\" ese dia... je... nose bleh",
-        "type": "video",
-        "textColor": "#e2e8f0",
-        "mediaUrl": ""
-    },
+    "day": 30,
+    "date": "2026-11-30",
+    "title": "Dia 30: Te quiere casar conmigo? :p",
+    "content": "Se que es repentino je... pero queria \"simular\" ese dia... je... nose bleh",
+    "type": "video",
+    "textColor": "#e2e8f0",
+    "mediaUrl": "media/WIN_20261123_11_32_20_Pro.mp4"
+},
     {
         "day": 31,
         "date": "2026-12-01",
